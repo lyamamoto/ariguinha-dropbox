@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My System</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="colors.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">M</div>
+      <h1>My <span>System</span></h1>
+      <button class="theme-toggle" id="theme-toggle">☀ Light</button>
+      <div class="nav-scroll">
+        <nav class="nav-tabs">
+          <button class="nav-tab active" data-view="overview">Overview</button>
+          <button class="nav-tab" data-view="graph">Graph</button>
+          <button class="nav-tab" data-view="services">Services</button>
+          <button class="nav-tab" data-view="flows">Flows</button>
+          <button class="nav-tab" data-view="deploy">Deploy</button>
+          <button class="nav-tab" data-view="decisions">ADRs</button>
+          <button class="nav-tab" data-view="slas">SLAs</button>
+          <button class="nav-tab" data-view="security">Security</button>
+          <button class="nav-tab" data-view="observability">Observability</button>
+          <button class="nav-tab" data-view="resilience">Resilience</button>
+          <button class="nav-tab" data-view="devsetup">Dev Setup</button>
+          <button class="nav-tab" data-view="testing">Testing</button>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section class="view active" id="view-overview"><div id="overview-content"></div></section>
+      <section class="view" id="view-graph"><div id="graph-content"></div></section>
+      <section class="view" id="view-services"><div id="services-content"></div></section>
+      <section class="view" id="view-flows"><div id="flows-content"></div></section>
+      <section class="view" id="view-deploy"><div id="deploy-content"></div></section>
+      <section class="view" id="view-decisions"><div id="decisions-content"></div></section>
+      <section class="view" id="view-slas"><div id="slas-content"></div></section>
+      <section class="view" id="view-security"><div id="security-content"></div></section>
+      <section class="view" id="view-observability"><div id="observability-content"></div></section>
+      <section class="view" id="view-resilience"><div id="resilience-content"></div></section>
+      <section class="view" id="view-devsetup"><div id="devsetup-content"></div></section>
+      <section class="view" id="view-testing"><div id="testing-content"></div></section>
+    </main>
+  </div>
+
+  <!-- === Architecture Data (from architecture.jsonld) === -->
+  <script type="application/ld+json" id="arch-data">
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "arch": "https://example.com/architecture#"
+  },
+  "@id": "https://example.com/architecture/my-system",
+  "@type": "arch:System",
+  "name": "My System",
+  "description": "A minimal example system to demonstrate the architecture template",
+  "version": "1.0.0",
+
+  "arch:changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-01-01",
+      "author": "Architecture",
+      "changes": ["Initial architecture documentation"]
+    }
+  ],
+
+  "arch:infrastructure": [
+    {
+      "@id": "arch:infra/main-db",
+      "@type": "arch:Database",
+      "name": "main-db",
+      "arch:port": 5432,
+      "arch:technology": ["PostgreSQL 16"],
+      "arch:status": "implemented",
+      "description": "Primary relational database"
+    },
+    {
+      "@id": "arch:infra/cache",
+      "@type": "arch:MessageBroker",
+      "name": "cache",
+      "arch:port": 6379,
+      "arch:technology": ["Redis 7"],
+      "arch:status": "implemented",
+      "description": "Cache and pub/sub message broker"
+    },
+    {
+      "@id": "arch:infra/message-queue",
+      "@type": "arch:MessageBroker",
+      "name": "message-queue",
+      "arch:port": 5672,
+      "arch:technology": ["RabbitMQ 3"],
+      "arch:status": "implemented",
+      "description": "Async message queue for event-driven workflows",
+      "arch:topics": [
+        { "name": "orders.created", "description": "New order events" },
+        { "name": "notifications.send", "description": "Notification dispatch events" }
+      ]
+    }
+  ],
+
+  "arch:domains": [
+    {
+      "@id": "arch:domain/core",
+      "@type": "arch:Domain",
+      "name": "Core",
+      "description": "Core business logic and API",
+      "arch:services": [
+        {
+          "@id": "arch:service/api-gateway",
+          "@type": "arch:Microservice",
+          "name": "Api Gateway",
+          "arch:port": 8080,
+          "arch:protocol": "REST",
+          "arch:technology": ["Node.js", "Express"],
+          "arch:status": "implemented",
+          "description": "Public API gateway — routing, auth, rate limiting",
+          "arch:endpoints": [
+            { "method": "GET", "path": "/api/orders", "description": "List orders" },
+            { "method": "POST", "path": "/api/orders", "description": "Create order" }
+          ],
+          "arch:dependsOn": ["arch:infra/cache", "arch:service/order-service"]
+        },
+        {
+          "@id": "arch:service/order-service",
+          "@type": "arch:Microservice",
+          "name": "Order Service",
+          "arch:port": 8081,
+          "arch:protocol": "gRPC",
+          "arch:technology": ["Go", "gRPC"],
+          "arch:status": "implemented",
+          "description": "Order management — CRUD, validation, state machine",
+          "arch:dependsOn": ["arch:infra/main-db", "arch:infra/message-queue"]
+        }
+      ]
+    },
+    {
+      "@id": "arch:domain/integration",
+      "@type": "arch:Domain",
+      "name": "Integration",
+      "description": "Event processing and notifications",
+      "arch:services": [
+        {
+          "@id": "arch:service/notification-worker",
+          "@type": "arch:Worker",
+          "name": "Notification Worker",
+          "arch:protocol": "Worker",
+          "arch:technology": ["Python", "Celery"],
+          "arch:status": "implemented",
+          "description": "Async notification dispatch — email, SMS, push",
+          "arch:dependsOn": ["arch:infra/message-queue", "arch:external/email-provider"]
+        }
+      ]
+    }
+  ],
+
+  "arch:externalSystems": [
+    {
+      "@id": "arch:external/email-provider",
+      "@type": "arch:ExternalSystem",
+      "name": "Email Provider",
+      "description": "Third-party email delivery service (SendGrid, SES, etc.)",
+      "arch:integrationPoints": [
+        { "direction": "outbound", "protocol": "REST", "description": "Send transactional emails" }
+      ]
+    }
+  ],
+
+  "arch:frontend": {
+    "@id": "arch:frontend/web-app",
+    "@type": "arch:Frontend",
+    "name": "Web App",
+    "arch:port": 3000,
+    "arch:technology": ["React", "TypeScript"],
+    "arch:status": "implemented",
+    "description": "Single-page application for end users",
+    "arch:connects": [
+      { "to": "arch:service/api-gateway", "protocol": "REST" }
+    ]
+  },
+
+  "arch:dataFlows": [
+    {
+      "@id": "arch:flow/order-creation",
+      "name": "Order Creation",
+      "description": "End-to-end flow from user placing an order to confirmation email",
+      "steps": [
+        { "from": "arch:frontend/web-app", "to": "arch:service/api-gateway", "protocol": "REST", "data": "POST /api/orders { items, address }" },
+        { "from": "arch:service/api-gateway", "to": "arch:service/order-service", "protocol": "gRPC", "data": "CreateOrder(request)" },
+        { "from": "arch:service/order-service", "to": "arch:infra/main-db", "protocol": "SQL", "data": "INSERT INTO orders" },
+        { "from": "arch:service/order-service", "to": "arch:infra/message-queue", "protocol": "AMQP", "data": "orders.created event" },
+        { "from": "arch:infra/message-queue", "to": "arch:service/notification-worker", "protocol": "AMQP", "data": "orders.created event" },
+        { "from": "arch:service/notification-worker", "to": "arch:external/email-provider", "protocol": "REST", "data": "Send confirmation email" }
+      ]
+    }
+  ],
+
+  "arch:decisions": [
+    {
+      "@id": "arch:adr/001",
+      "title": "Use gRPC for inter-service communication",
+      "status": "accepted",
+      "date": "2026-01-01",
+      "context": "Services need low-latency, typed communication with schema evolution support.",
+      "decision": "Use gRPC with Protocol Buffers for all service-to-service calls.",
+      "consequences": "Requires proto file management; browser clients go through REST gateway.",
+      "alternatives": ["REST with OpenAPI", "GraphQL federation"]
+    }
+  ],
+
+  "arch:deploymentConsiderations": {
+    "stateless": ["Api Gateway", "Notification Worker"],
+    "stateful_db": ["Order Service (PostgreSQL)"],
+    "horizontalScaling": {
+      "Api Gateway": "Scale behind load balancer",
+      "Notification Worker": "Scale consumers per queue depth"
+    }
+  },
+
+  "arch:sla": {
+    "latency": {
+      "API Gateway to Order Service": { "target": "< 50ms p99", "notes": "gRPC, same VPC" },
+      "Order Creation E2E": { "target": "< 200ms p95", "notes": "Excludes async notification" }
+    },
+    "availability": {
+      "target": "99.9%",
+      "current": "Development (no SLA)",
+      "notes": "Production SLA pending deployment"
+    }
+  },
+
+  "arch:security": {
+    "authentication": { "current": "JWT via API Gateway", "planned": "OAuth2 + OIDC provider" },
+    "authorization": { "current": "Role-based (admin, user)", "planned": "Fine-grained ABAC policies" }
+  },
+
+  "arch:observability": {
+    "logging": { "format": "JSON structured", "centralized": false, "planned": "ELK stack" },
+    "healthChecks": { "endpoints": ["/health"], "interval": "30s" }
+  },
+
+  "arch:resilience": {
+    "patterns": [
+      { "name": "Retry with backoff", "service": "Notification Worker", "status": "implemented", "details": "3 retries with exponential backoff on email delivery failure" },
+      { "name": "Circuit Breaker", "service": "Api Gateway to Order Service", "status": "planned", "details": "Open circuit after 5 consecutive failures, half-open after 30s" }
+    ]
+  },
+
+  "arch:localDev": {
+    "prerequisites": ["Docker & Docker Compose", "Node.js 20+", "Go 1.22+", "Python 3.12+"],
+    "infrastructure": {
+      "command": "docker compose up -d",
+      "services": ["PostgreSQL :5432", "Redis :6379", "RabbitMQ :5672 (management :15672)"]
+    },
+    "startupOrder": ["1. Infrastructure (docker compose)", "2. Order Service (:8081)", "3. Notification Worker", "4. Api Gateway (:8080)", "5. Web App (:3000)"]
+  },
+
+  "arch:testing": {
+    "summary": { "total": "42", "coverage": "~65%", "framework": "Jest + Go test + pytest" },
+    "byService": [
+      { "service": "Api Gateway", "tests": 15, "coverage": "70%", "types": ["unit", "integration"] },
+      { "service": "Order Service", "tests": 20, "coverage": "75%", "types": ["unit", "integration"] },
+      { "service": "Notification Worker", "tests": 7, "coverage": "45%", "types": ["unit"] }
+    ],
+    "gaps": ["No E2E tests", "Notification Worker integration tests missing", "No load testing"]
+  }
+}
+  </script>
+
+  <!-- === Project-Specific Config === -->
+  <script>
+    // ARCH_CONFIG: maps JSON-LD IDs to visual positions, domain colors, and connection styles.
+    // This is the only project-specific JS — render.js is generic.
+    window.ARCH_CONFIG = {
+      // Hand-tuned node positions for the main graph
+      NODE_POSITIONS: {
+        'arch:frontend/web-app':          { x: 20,  y: 20 },
+        'arch:service/api-gateway':       { x: 240, y: 20 },
+        'arch:service/order-service':     { x: 480, y: 20 },
+        'arch:infra/main-db':            { x: 480, y: 160 },
+        'arch:infra/cache':              { x: 240, y: 160 },
+        'arch:infra/message-queue':      { x: 720, y: 20 },
+        'arch:service/notification-worker': { x: 720, y: 160 },
+        'arch:external/email-provider':  { x: 960, y: 160 }
+      },
+
+      // Main graph connection list
+      GRAPH_CONNECTIONS: [
+        { from: 'arch:frontend/web-app', to: 'arch:service/api-gateway', type: 'http', label: 'REST' },
+        { from: 'arch:service/api-gateway', to: 'arch:infra/cache', type: 'cache', label: 'Session/rate-limit' },
+        { from: 'arch:service/api-gateway', to: 'arch:service/order-service', type: 'grpc', label: 'gRPC' },
+        { from: 'arch:service/order-service', to: 'arch:infra/main-db', type: 'http', label: 'SQL' },
+        { from: 'arch:service/order-service', to: 'arch:infra/message-queue', type: 'mq', label: 'orders.created' },
+        { from: 'arch:infra/message-queue', to: 'arch:service/notification-worker', type: 'mq', label: 'orders.created' },
+        { from: 'arch:service/notification-worker', to: 'arch:external/email-provider', type: 'external', label: 'Send email' }
+      ],
+
+      // Domain name → CSS class mapping
+      DOMAIN_MAP: {
+        'Core': 'core',
+        'Integration': 'integration'
+      },
+
+      // CSS class → color value (used for legend dots, topology card accents)
+      DOMAIN_COLORS: {
+        'core':        'oklch(0.65 0.20 260)',
+        'integration': 'oklch(0.70 0.16 165)',
+        'infra':       'oklch(0.60 0.18 290)',
+        'external':    'oklch(0.75 0.18 85)',
+        'frontend':    'oklch(0.85 0.04 250)'
+      },
+
+      // Connection type → visual style
+      CONN_STYLES: {
+        'http':      { stroke: 'oklch(0.70 0.16 165)', dash: '3 3' },
+        'grpc':      { stroke: 'oklch(0.75 0.18 85)',  width: '2' },
+        'mq':        { stroke: 'oklch(0.64 0.17 155)', dash: '6 3' },
+        'cache':     { stroke: 'oklch(0.60 0.18 290)' },
+        'external':  { stroke: 'oklch(0.48 0 0)',      dash: '8 4' }
+      },
+
+      // Flow name → accent color
+      FLOW_COLORS: {
+        'Order Creation': 'oklch(0.65 0.20 260)'
+      }
+    };
+  </script>
+
+  <!-- === Generic Rendering Engine === -->
+  <script src="../render.js"></script>
+</body>
+</html>

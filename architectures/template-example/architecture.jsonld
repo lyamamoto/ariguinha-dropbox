@@ -1,0 +1,220 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "arch": "https://example.com/architecture#"
+  },
+  "@id": "https://example.com/architecture/my-system",
+  "@type": "arch:System",
+  "name": "My System",
+  "description": "A minimal example system to demonstrate the architecture template",
+  "version": "1.0.0",
+
+  "arch:changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-01-01",
+      "author": "Architecture",
+      "changes": ["Initial architecture documentation"]
+    }
+  ],
+
+  "arch:infrastructure": [
+    {
+      "@id": "arch:infra/main-db",
+      "@type": "arch:Database",
+      "name": "main-db",
+      "arch:port": 5432,
+      "arch:technology": ["PostgreSQL 16"],
+      "arch:status": "implemented",
+      "description": "Primary relational database"
+    },
+    {
+      "@id": "arch:infra/cache",
+      "@type": "arch:MessageBroker",
+      "name": "cache",
+      "arch:port": 6379,
+      "arch:technology": ["Redis 7"],
+      "arch:status": "implemented",
+      "description": "Cache and pub/sub message broker"
+    },
+    {
+      "@id": "arch:infra/message-queue",
+      "@type": "arch:MessageBroker",
+      "name": "message-queue",
+      "arch:port": 5672,
+      "arch:technology": ["RabbitMQ 3"],
+      "arch:status": "implemented",
+      "description": "Async message queue for event-driven workflows",
+      "arch:topics": [
+        { "name": "orders.created", "description": "New order events" },
+        { "name": "notifications.send", "description": "Notification dispatch events" }
+      ]
+    }
+  ],
+
+  "arch:domains": [
+    {
+      "@id": "arch:domain/core",
+      "@type": "arch:Domain",
+      "name": "Core",
+      "description": "Core business logic and API",
+      "arch:services": [
+        {
+          "@id": "arch:service/api-gateway",
+          "@type": "arch:Microservice",
+          "name": "Api Gateway",
+          "arch:port": 8080,
+          "arch:protocol": "REST",
+          "arch:technology": ["Node.js", "Express"],
+          "arch:status": "implemented",
+          "description": "Public API gateway — routing, auth, rate limiting",
+          "arch:endpoints": [
+            { "method": "GET", "path": "/api/orders", "description": "List orders" },
+            { "method": "POST", "path": "/api/orders", "description": "Create order" }
+          ],
+          "arch:dependsOn": ["arch:infra/cache", "arch:service/order-service"]
+        },
+        {
+          "@id": "arch:service/order-service",
+          "@type": "arch:Microservice",
+          "name": "Order Service",
+          "arch:port": 8081,
+          "arch:protocol": "gRPC",
+          "arch:technology": ["Go", "gRPC"],
+          "arch:status": "implemented",
+          "description": "Order management — CRUD, validation, state machine",
+          "arch:dependsOn": ["arch:infra/main-db", "arch:infra/message-queue"]
+        }
+      ]
+    },
+    {
+      "@id": "arch:domain/integration",
+      "@type": "arch:Domain",
+      "name": "Integration",
+      "description": "Event processing and notifications",
+      "arch:services": [
+        {
+          "@id": "arch:service/notification-worker",
+          "@type": "arch:Worker",
+          "name": "Notification Worker",
+          "arch:protocol": "Worker",
+          "arch:technology": ["Python", "Celery"],
+          "arch:status": "implemented",
+          "description": "Async notification dispatch — email, SMS, push",
+          "arch:dependsOn": ["arch:infra/message-queue", "arch:external/email-provider"]
+        }
+      ]
+    }
+  ],
+
+  "arch:externalSystems": [
+    {
+      "@id": "arch:external/email-provider",
+      "@type": "arch:ExternalSystem",
+      "name": "Email Provider",
+      "description": "Third-party email delivery service (SendGrid, SES, etc.)",
+      "arch:integrationPoints": [
+        { "direction": "outbound", "protocol": "REST", "description": "Send transactional emails" }
+      ]
+    }
+  ],
+
+  "arch:frontend": {
+    "@id": "arch:frontend/web-app",
+    "@type": "arch:Frontend",
+    "name": "Web App",
+    "arch:port": 3000,
+    "arch:technology": ["React", "TypeScript"],
+    "arch:status": "implemented",
+    "description": "Single-page application for end users",
+    "arch:connects": [
+      { "to": "arch:service/api-gateway", "protocol": "REST" }
+    ]
+  },
+
+  "arch:dataFlows": [
+    {
+      "@id": "arch:flow/order-creation",
+      "name": "Order Creation",
+      "description": "End-to-end flow from user placing an order to confirmation email",
+      "steps": [
+        { "from": "arch:frontend/web-app", "to": "arch:service/api-gateway", "protocol": "REST", "data": "POST /api/orders { items, address }" },
+        { "from": "arch:service/api-gateway", "to": "arch:service/order-service", "protocol": "gRPC", "data": "CreateOrder(request)" },
+        { "from": "arch:service/order-service", "to": "arch:infra/main-db", "protocol": "SQL", "data": "INSERT INTO orders" },
+        { "from": "arch:service/order-service", "to": "arch:infra/message-queue", "protocol": "AMQP", "data": "orders.created event" },
+        { "from": "arch:infra/message-queue", "to": "arch:service/notification-worker", "protocol": "AMQP", "data": "orders.created event" },
+        { "from": "arch:service/notification-worker", "to": "arch:external/email-provider", "protocol": "REST", "data": "Send confirmation email" }
+      ]
+    }
+  ],
+
+  "arch:decisions": [
+    {
+      "@id": "arch:adr/001",
+      "title": "Use gRPC for inter-service communication",
+      "status": "accepted",
+      "date": "2026-01-01",
+      "context": "Services need low-latency, typed communication with schema evolution support.",
+      "decision": "Use gRPC with Protocol Buffers for all service-to-service calls.",
+      "consequences": "Requires proto file management; browser clients go through REST gateway.",
+      "alternatives": ["REST with OpenAPI", "GraphQL federation"]
+    }
+  ],
+
+  "arch:deploymentConsiderations": {
+    "stateless": ["Api Gateway", "Notification Worker"],
+    "stateful_db": ["Order Service (PostgreSQL)"],
+    "horizontalScaling": {
+      "Api Gateway": "Scale behind load balancer",
+      "Notification Worker": "Scale consumers per queue depth"
+    }
+  },
+
+  "arch:sla": {
+    "latency": {
+      "API Gateway → Order Service": { "target": "< 50ms p99", "notes": "gRPC, same VPC" },
+      "Order Creation E2E": { "target": "< 200ms p95", "notes": "Excludes async notification" }
+    },
+    "availability": {
+      "target": "99.9%",
+      "current": "Development (no SLA)",
+      "notes": "Production SLA pending deployment"
+    }
+  },
+
+  "arch:security": {
+    "authentication": { "current": "JWT via API Gateway", "planned": "OAuth2 + OIDC provider" },
+    "authorization": { "current": "Role-based (admin, user)", "planned": "Fine-grained ABAC policies" }
+  },
+
+  "arch:observability": {
+    "logging": { "format": "JSON structured", "centralized": false, "planned": "ELK stack" },
+    "healthChecks": { "endpoints": ["/health"], "interval": "30s" }
+  },
+
+  "arch:resilience": {
+    "patterns": [
+      { "name": "Retry with backoff", "service": "Notification Worker", "status": "implemented", "details": "3 retries with exponential backoff on email delivery failure" },
+      { "name": "Circuit Breaker", "service": "Api Gateway → Order Service", "status": "planned", "details": "Open circuit after 5 consecutive failures, half-open after 30s" }
+    ]
+  },
+
+  "arch:localDev": {
+    "prerequisites": ["Docker & Docker Compose", "Node.js 20+", "Go 1.22+", "Python 3.12+"],
+    "infrastructure": {
+      "command": "docker compose up -d",
+      "services": ["PostgreSQL :5432", "Redis :6379", "RabbitMQ :5672 (management :15672)"]
+    },
+    "startupOrder": ["1. Infrastructure (docker compose)", "2. Order Service (:8081)", "3. Notification Worker", "4. Api Gateway (:8080)", "5. Web App (:3000)"]
+  },
+
+  "arch:testing": {
+    "summary": { "total": "42", "coverage": "~65%", "framework": "Jest + Go test + pytest" },
+    "byService": [
+      { "service": "Api Gateway", "tests": 15, "coverage": "70%", "types": ["unit", "integration"] },
+      { "service": "Order Service", "tests": 20, "coverage": "75%", "types": ["unit", "integration"] },
+      { "service": "Notification Worker", "tests": 7, "coverage": "45%", "types": ["unit"] }
+    ],
+    "gaps": ["No E2E tests", "Notification Worker integration tests missing", "No load testing"]
+  }
+}

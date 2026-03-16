@@ -1,0 +1,489 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://trading.internal/architecture/schema.json",
+  "title": "Architecture Documentation Schema",
+  "description": "JSON Schema for validating architecture.jsonld files following the Architecture Documentation Premises",
+  "type": "object",
+  "required": ["@context", "@id", "@type", "name", "description", "version", "arch:infrastructure", "arch:domains", "arch:changelog"],
+  "properties": {
+    "@context": {
+      "type": "object",
+      "description": "JSON-LD context with arch: vocabulary prefix"
+    },
+    "@id": {
+      "type": "string",
+      "description": "Unique identifier URI for this architecture"
+    },
+    "@type": {
+      "type": "string",
+      "const": "arch:System",
+      "description": "Type must be arch:System"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable system name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief system description"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this architecture document"
+    },
+
+    "arch:infrastructure": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/Infrastructure" },
+      "description": "Databases, message brokers, caches"
+    },
+
+    "arch:domains": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/Domain" },
+      "description": "Business domains containing services"
+    },
+
+    "arch:changelog": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/ChangelogEntry" },
+      "description": "Version history of this document"
+    },
+
+    "arch:externalSystems": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/ExternalSystem" },
+      "description": "Third-party integrations and partner systems"
+    },
+
+    "arch:dataFlows": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/DataFlow" },
+      "description": "End-to-end data flow descriptions"
+    },
+
+    "arch:frontend": {
+      "oneOf": [
+        { "$ref": "#/definitions/Frontend" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Frontend" }
+        }
+      ],
+      "description": "Frontend application(s)"
+    },
+
+    "arch:deploymentConsiderations": {
+      "type": "object",
+      "description": "Scaling strategy, topology, infrastructure mapping"
+    },
+
+    "arch:decisions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Decision" },
+      "description": "Architecture Decision Records (ADRs)"
+    },
+
+    "arch:sla": {
+      "$ref": "#/definitions/SLA",
+      "description": "Non-functional requirements"
+    },
+
+    "arch:security": {
+      "$ref": "#/definitions/Security",
+      "description": "Security posture documentation"
+    },
+
+    "arch:observability": {
+      "$ref": "#/definitions/Observability",
+      "description": "Logging, metrics, tracing, health checks"
+    },
+
+    "arch:resilience": {
+      "$ref": "#/definitions/Resilience",
+      "description": "Resilience patterns and fault tolerance"
+    },
+
+    "arch:localDev": {
+      "$ref": "#/definitions/LocalDev",
+      "description": "Development setup and environment"
+    },
+
+    "arch:testing": {
+      "$ref": "#/definitions/Testing",
+      "description": "Test strategy and coverage"
+    }
+  },
+
+  "definitions": {
+    "Status": {
+      "type": "string",
+      "enum": ["implemented", "planned", "deprecated"],
+      "description": "Implementation status of a component"
+    },
+
+    "Infrastructure": {
+      "type": "object",
+      "required": ["@id", "@type", "name", "arch:port", "arch:technology"],
+      "properties": {
+        "@id": { "type": "string" },
+        "@type": { "type": "string", "enum": ["arch:Database", "arch:MessageBroker", "arch:Cache"] },
+        "name": { "type": "string" },
+        "arch:port": { "type": "integer" },
+        "arch:technology": { "type": "array", "items": { "type": "string" } },
+        "arch:status": { "$ref": "#/definitions/Status" },
+        "description": { "type": "string" },
+        "arch:schemas": { "type": "array", "items": { "type": "string" } },
+        "arch:streams": { "type": "array", "items": { "type": "string" } },
+        "arch:hashes": { "type": "array", "items": { "type": "string" } },
+        "arch:topics": { "type": "array", "items": { "$ref": "#/definitions/KafkaTopic" } }
+      }
+    },
+
+    "KafkaTopic": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "partitionKey": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+
+    "Domain": {
+      "type": "object",
+      "required": ["@id", "@type", "name", "arch:services"],
+      "properties": {
+        "@id": { "type": "string" },
+        "@type": { "type": "string", "const": "arch:Domain" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "arch:services": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/Service" }
+        }
+      }
+    },
+
+    "Service": {
+      "type": "object",
+      "required": ["@id", "@type", "name"],
+      "properties": {
+        "@id": { "type": "string" },
+        "@type": { "type": "string", "enum": ["arch:Microservice", "arch:Worker"] },
+        "name": { "type": "string" },
+        "arch:port": { "type": ["integer", "null"] },
+        "arch:protocol": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array", "items": { "type": "string" } }
+          ]
+        },
+        "arch:technology": { "type": "array", "items": { "type": "string" } },
+        "arch:status": { "$ref": "#/definitions/Status" },
+        "description": { "type": "string" },
+        "arch:endpoints": { "type": "array", "items": { "$ref": "#/definitions/Endpoint" } },
+        "arch:dependsOn": { "type": "array", "items": { "type": "string" } },
+        "arch:publishes": { "type": "array", "items": { "type": "object" } },
+        "arch:consumes": { "type": "array", "items": { "type": "object" } },
+        "arch:dbSchema": { "type": "string" },
+        "arch:entities": { "type": "array", "items": { "$ref": "#/definitions/Entity" } },
+        "arch:inMemoryStores": { "type": "array", "items": { "type": "string" } },
+        "arch:subSystems": { "type": "object" },
+        "arch:externalDependency": {
+          "oneOf": [
+            { "type": "object" },
+            { "type": "array", "items": { "type": "object" } }
+          ]
+        },
+        "arch:futureEvolution": { "type": "object" }
+      }
+    },
+
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "method": { "type": "string" },
+        "protocol": { "type": "string" },
+        "path": { "type": "string" },
+        "service": { "type": "string" },
+        "methods": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      }
+    },
+
+    "Entity": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "fields": { "type": "array", "items": { "type": "string" } },
+        "uniqueKey": { "type": "string" }
+      }
+    },
+
+    "ExternalSystem": {
+      "type": "object",
+      "required": ["@id", "@type", "name"],
+      "properties": {
+        "@id": { "type": "string" },
+        "@type": { "type": "string", "const": "arch:ExternalSystem" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "arch:integrationPoints": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/IntegrationPoint" }
+        }
+      }
+    },
+
+    "IntegrationPoint": {
+      "type": "object",
+      "required": ["direction"],
+      "properties": {
+        "direction": { "type": "string" },
+        "channel": { "type": "string" },
+        "stream": { "type": "string" },
+        "hash": { "type": "string" },
+        "protocol": { "type": "string" },
+        "endpoint": { "type": "string" },
+        "service": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+
+    "DataFlow": {
+      "type": "object",
+      "required": ["@id", "name", "steps"],
+      "properties": {
+        "@id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "steps": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/FlowStep" }
+        }
+      }
+    },
+
+    "FlowStep": {
+      "type": "object",
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" },
+        "protocol": { "type": "string" },
+        "data": { "type": "string" },
+        "component": { "type": "string" },
+        "action": { "type": "string" }
+      }
+    },
+
+    "Frontend": {
+      "type": "object",
+      "required": ["@id", "@type", "name"],
+      "properties": {
+        "@id": { "type": "string" },
+        "@type": { "type": "string", "const": "arch:Frontend" },
+        "name": { "type": "string" },
+        "arch:port": { "type": "integer" },
+        "arch:technology": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" },
+        "arch:connects": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+
+    "ChangelogEntry": {
+      "type": "object",
+      "required": ["version", "date", "changes"],
+      "properties": {
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "date": { "type": "string", "format": "date" },
+        "author": { "type": "string" },
+        "changes": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    },
+
+    "Decision": {
+      "type": "object",
+      "required": ["@id", "title", "status", "date", "context", "decision", "consequences"],
+      "properties": {
+        "@id": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["accepted", "superseded", "deprecated"] },
+        "date": { "type": "string" },
+        "context": { "type": "string" },
+        "decision": { "type": "string" },
+        "consequences": { "type": "string" },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "supersededBy": { "type": "string" }
+      }
+    },
+
+    "SLA": {
+      "type": "object",
+      "properties": {
+        "latency": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/SLAMetric" }
+        },
+        "throughput": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/SLAMetric" }
+        },
+        "availability": {
+          "type": "object",
+          "properties": {
+            "target": { "type": "string" },
+            "current": { "type": "string" },
+            "notes": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "SLAMetric": {
+      "type": "object",
+      "properties": {
+        "target": { "type": "string" },
+        "measured": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "Security": {
+      "type": "object",
+      "properties": {
+        "authentication": { "$ref": "#/definitions/SecurityItem" },
+        "authorization": { "$ref": "#/definitions/SecurityItem" },
+        "networkPolicies": { "$ref": "#/definitions/SecurityItem" },
+        "tls": { "$ref": "#/definitions/SecurityItem" },
+        "secrets": { "$ref": "#/definitions/SecurityItem" },
+        "apiSecurity": { "$ref": "#/definitions/SecurityItem" }
+      }
+    },
+
+    "SecurityItem": {
+      "type": "object",
+      "required": ["current"],
+      "properties": {
+        "current": { "type": "string" },
+        "planned": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "Observability": {
+      "type": "object",
+      "properties": {
+        "logging": {
+          "type": "object",
+          "properties": {
+            "framework": { "type": "string" },
+            "level": { "type": "string" },
+            "structured": { "type": "boolean" },
+            "centralized": { "type": "boolean" },
+            "notes": { "type": "string" }
+          }
+        },
+        "metrics": { "$ref": "#/definitions/SecurityItem" },
+        "tracing": { "$ref": "#/definitions/SecurityItem" },
+        "healthChecks": {
+          "type": "object",
+          "properties": {
+            "current": { "type": "string" },
+            "endpoints": { "type": "array", "items": { "type": "string" } },
+            "notes": { "type": "string" }
+          }
+        },
+        "dashboards": { "$ref": "#/definitions/SecurityItem" },
+        "alerting": { "$ref": "#/definitions/SecurityItem" }
+      }
+    },
+
+    "Resilience": {
+      "type": "object",
+      "required": ["patterns"],
+      "properties": {
+        "patterns": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ResiliencePattern" }
+        }
+      }
+    },
+
+    "ResiliencePattern": {
+      "type": "object",
+      "required": ["name", "status"],
+      "properties": {
+        "name": { "type": "string" },
+        "service": { "type": "string" },
+        "details": { "type": "string" },
+        "status": { "$ref": "#/definitions/Status" }
+      }
+    },
+
+    "LocalDev": {
+      "type": "object",
+      "properties": {
+        "prerequisites": { "type": "array", "items": { "type": "string" } },
+        "infrastructure": {
+          "type": "object",
+          "properties": {
+            "command": { "type": "string" },
+            "services": { "type": "array", "items": { "type": "string" } },
+            "notes": { "type": "string" }
+          }
+        },
+        "startupOrder": { "type": "array", "items": { "type": "string" } },
+        "migrations": { "type": "object", "additionalProperties": { "type": "string" } },
+        "envVars": { "type": "object", "additionalProperties": { "type": "string" } },
+        "seedData": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "Testing": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "object",
+          "properties": {
+            "total": { "type": "string" },
+            "coverage": { "type": "string" },
+            "framework": { "type": "string" }
+          }
+        },
+        "byService": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ServiceTestInfo" }
+        },
+        "gaps": { "type": "array", "items": { "type": "string" } },
+        "contractTests": {
+          "type": "object",
+          "properties": {
+            "status": { "$ref": "#/definitions/Status" },
+            "approach": { "type": "string" }
+          }
+        }
+      }
+    },
+
+    "ServiceTestInfo": {
+      "type": "object",
+      "required": ["service", "tests"],
+      "properties": {
+        "service": { "type": "string" },
+        "tests": { "type": "integer", "minimum": 0 },
+        "coverage": { "type": "string" },
+        "types": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
