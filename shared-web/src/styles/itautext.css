@@ -1,0 +1,43 @@
+@font-face {
+  font-display: swap;
+  font-family: "Itau Text";
+  font-weight: 200;
+  src:
+    url("../assets/fonts/ItauTextPro_Lt.eot") format("embedded-opentype"),
+    url("../assets/fonts/ItauTextPro_Lt.woff2") format("woff2"),
+    url("../assets/fonts/ItauTextPro_Lt.woff") format("woff"),
+    url("../assets/fonts/ItauTextPro_Lt.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Itau Text";
+  font-weight: 400;
+  src:
+    url("../assets/fonts/ItauTextPro_Rg.eot") format("embedded-opentype"),
+    url("../assets/fonts/ItauTextPro_Rg.woff2") format("woff2"),
+    url("../assets/fonts/ItauTextPro_Rg.woff") format("woff"),
+    url("../assets/fonts/ItauTextPro_Rg.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Itau Text";
+  font-weight: 700;
+  src:
+    url("../assets/fonts/ItauTextPro_Bd.eot") format("embedded-opentype"),
+    url("../assets/fonts/ItauTextPro_Bd.woff2") format("woff2"),
+    url("../assets/fonts/ItauTextPro_Bd.woff") format("woff"),
+    url("../assets/fonts/ItauTextPro_Bd.ttf") format("truetype");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Itau Text";
+  font-weight: 900;
+  src:
+    url("../assets/fonts/ItauTextPro_XBd.eot") format("embedded-opentype"),
+    url("../assets/fonts/ItauTextPro_XBd.woff2") format("woff2"),
+    url("../assets/fonts/ItauTextPro_XBd.woff") format("woff"),
+    url("../assets/fonts/ItauTextPro_XBd.ttf") format("truetype");
+}
