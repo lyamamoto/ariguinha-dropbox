@@ -1,0 +1,16 @@
+Implemente a task T-XXX-001 (Criar camada Core).
+
+Abordagem:
+1. Crie o projeto MyApp.Core com a estrutura definida em K-WV2-03
+2. Identifique no código existente: entidades, value objects, e interfaces 
+   que representam contratos de serviço
+3. MOVA (não copie) essas classes para Core, ajustando namespaces
+4. Crie interfaces para qualquer dependência concreta (ICustomerRepository, etc.)
+5. O projeto Core NÃO deve referenciar nenhum outro projeto da solution
+6. Após a mudança, a solution deve compilar (os outros projetos vão referenciar Core)
+
+Critério de verificação: 
+- dotnet build compila sem erros
+- Core.csproj não tem referência a nenhum outro projeto
+- Nenhuma classe em Core usa namespaces de System.Data, 
+  Microsoft.AspNetCore, ou qualquer framework de infra

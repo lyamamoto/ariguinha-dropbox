@@ -1,0 +1,28 @@
+!ppm-new-requirement
+
+Com base no relatório de análise que você produziu, crie um epic e features 
+para a reestruturação arquitetural:
+
+Epic: "Adequação Arquitetural WebView2" — reestruturar a aplicação para 
+seguir os padrões K-WV2-01 a K-WV2-04.
+
+Divida em features separadas para C# e React, na ordem de dependência:
+
+Para C#:
+- Feature: Criar camada Core (extrair entidades, value objects, interfaces do código existente)
+- Feature: Criar camada Infrastructure (mover implementações concretas — DB, HTTP clients, etc.)
+- Feature: Reestruturar Bridge (criar Handlers por domínio, implementar BridgeRouter, definir DTOs)
+- Feature: Limpar Host (tornar composition root puro — apenas DI e wiring)
+
+Para React:
+- Feature: Criar camada de contracts (extrair interfaces de serviço do código existente)
+- Feature: Criar camada de transports (http, ws, webview-bridge como primitivas genéricas)
+- Feature: Criar factories e bootstrap (composição por ambiente)
+- Feature: Criar ServiceContext e migrar features para usar hooks tipados
+
+Cada feature deve ter user stories com ACs verificáveis. Os ACs devem ser 
+do tipo "nenhum arquivo em Core/ referencia namespaces de Infrastructure" 
+ou "nenhum componente em features/ importa de api/transports/".
+
+Priorize: Core C# primeiro (sem dependências), depois Infrastructure, 
+depois Bridge, depois Host. React em paralelo começando por contracts.

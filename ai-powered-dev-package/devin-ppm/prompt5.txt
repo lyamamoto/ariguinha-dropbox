@@ -1,0 +1,5 @@
+Implemente a task T-XXX-002 (Criar camada Infrastructure).
+
+Mova as implementações concretas (repositories, HTTP clients, DB context) 
+para MyApp.Infrastructure. Cada classe deve implementar uma interface 
+definida em Core. Infrastructure referencia apenas Core.

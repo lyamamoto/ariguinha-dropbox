@@ -1,0 +1,22 @@
+Analise a estrutura atual da aplicação neste repositório e compare com os 
+padrões de arquitetura definidos nos Knowledge K-WV2-01 a K-WV2-04.
+
+Para o lado C# (Host):
+- Identifique se existe separação em Core, Infrastructure, Bridge e Host
+- Liste quais responsabilidades estão no lugar errado (ex: lógica de negócio no Host, acesso a DB no Bridge)
+- Identifique se as interfaces do Core existem ou se as implementações estão acopladas
+- Verifique se o BridgeRouter e os Handlers seguem o padrão domain:action
+- Verifique se o DI está configurado no Program.cs como composition root
+
+Para o lado React (SPA embeddado):
+- Identifique se existe a camada api/ com contracts, transports e services separados
+- Verifique se as features importam transports diretamente (violação K-WV2-01)
+- Verifique se existe ServiceContext com hooks tipados
+- Verifique se o bootstrap detecta ambiente (WebView2 vs web)
+
+Produza um relatório com:
+1. Estado atual (o que existe e como está organizado)
+2. Gaps vs padrão (o que falta ou está no lugar errado)
+3. Proposta de migração ordenada (o que migrar primeiro, dependências entre mudanças)
+
+NÃO faça nenhuma alteração no código. Apenas análise.

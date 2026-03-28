@@ -1,0 +1,16 @@
+!ppm-planning
+
+Planeje o sprint de reestruturação arquitetural. Considere:
+
+- Capacidade: sprint de 2 semanas, foco exclusivo nesta reestruturação
+- Prioridade: comece pelas camadas sem dependência (Core C# e contracts React)
+- Dependências: Infrastructure depende de Core, Bridge depende de ambos, 
+  Host depende de tudo
+- O sprint deve terminar com a aplicação funcionando exatamente como antes, 
+  mas com a estrutura reorganizada
+- Inclua uma task final de validação: rodar a aplicação, verificar que 
+  todas as funcionalidades existentes continuam funcionando
+
+Crie o sprint file com test plan. Os testes devem verificar tanto a 
+estrutura (ex: "nenhuma referência cruzada entre camadas proibidas") 
+quanto a funcionalidade (ex: "fluxo de criação de order funciona end-to-end").
