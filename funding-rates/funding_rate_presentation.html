@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funding Rate — Estratégia de Arbitragem em Crypto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #16161f;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #e8e6e0;
+  --muted: #7a7870;
+  --accent: #c8b560;
+  --accent2: #5b8fd4;
+  --accent3: #6dc49a;
+  --danger: #d46b5b;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'Outfit', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+  --radius: 10px;
+  --radius-lg: 16px;
+}
+
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem; height: 60px;
+  background: rgba(10,10,15,0.88); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: .08em; text-transform: uppercase; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: .03em; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); }
+
+.progress-bar { position: fixed; top: 60px; left: 0; height: 2px; background: var(--accent); width: 0%; z-index: 99; transition: width .1s; }
+
+section { min-height: 100vh; padding: 120px 3rem 80px; max-width: 1100px; margin: 0 auto; }
+.divider { width: 100%; height: 1px; background: var(--border); }
+
+/* HERO */
+#hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 3rem; max-width: 1100px; margin: 0 auto; position: relative; }
+.hero-tag { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; animation: fadeUp .6s .2s ease forwards; }
+.hero-h1 { font-family: var(--serif); font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1.05; font-weight: 400; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp .6s .35s ease forwards; }
+.hero-h1 em { font-style: italic; color: var(--accent); }
+.hero-lead { font-size: 1.1rem; color: var(--muted); max-width: 560px; line-height: 1.8; margin-bottom: 3rem; font-weight: 300; opacity: 0; animation: fadeUp .6s .5s ease forwards; }
+.hero-stats { display: flex; gap: 3rem; opacity: 0; animation: fadeUp .6s .65s ease forwards; flex-wrap: wrap; }
+.stat-num { font-family: var(--mono); font-size: 1.8rem; font-weight: 500; color: var(--accent); display: block; }
+.stat-label { font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.hero-scroll { position: absolute; bottom: 3rem; left: 3rem; display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); letter-spacing: .06em; opacity: 0; animation: fadeUp .6s .9s ease forwards; }
+.hero-scroll::before { content: ''; display: block; width: 40px; height: 1px; background: var(--muted); }
+
+/* SECTION HEADERS */
+.sec-tag { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 1rem; }
+.sec-h2 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
+.sec-lead { font-size: 1rem; color: var(--muted); max-width: 640px; font-weight: 300; margin-bottom: 3rem; line-height: 1.8; }
+
+/* TICKER */
+.ticker-wrap { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 0; margin-bottom: 4rem; background: var(--bg2); }
+.ticker { display: flex; gap: 3rem; animation: ticker 22s linear infinite; white-space: nowrap; }
+.ticker-item { font-family: var(--mono); font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.ticker-item .ti-val { color: var(--accent); }
+.ticker-item .ti-neg { color: var(--danger); }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* EQUATION */
+.equation-box { background: var(--bg3); border: 1px solid var(--border2); border-radius: var(--radius-lg); padding: 2.5rem; margin-bottom: 3rem; text-align: center; }
+.eq-label { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1rem; font-family: var(--mono); }
+.eq-formula { font-family: var(--mono); font-size: clamp(0.8rem, 1.8vw, 1.05rem); color: var(--text); letter-spacing: .02em; line-height: 2; }
+.eq-formula .pos { color: var(--accent3); }
+.eq-formula .neg { color: var(--danger); }
+.eq-formula .op  { color: var(--muted); }
+.eq-formula .main { color: var(--accent); font-weight: 500; }
+
+/* COMPONENTS GRID */
+.components-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 3rem; }
+.comp-card { background: var(--bg2); padding: 2rem; cursor: pointer; transition: background .2s; position: relative; }
+.comp-card:hover, .comp-card.active { background: var(--bg3); }
+.comp-card::before { content: ''; display: block; width: 3px; height: 0; background: var(--accent-c, var(--accent)); position: absolute; left: 0; top: 0; transition: height .3s; border-radius: 0 2px 2px 0; }
+.comp-card.active::before { height: 100%; }
+.comp-num { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: .75rem; letter-spacing: .06em; }
+.comp-name { font-family: var(--serif); font-size: 1.2rem; margin-bottom: .5rem; }
+.comp-formula { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-bottom: 1rem; padding: 6px 10px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); word-break: break-all; }
+.comp-desc { font-size: 13.5px; color: var(--muted); line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+.comp-card.active .comp-desc { max-height: 200px; }
+.comp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; max-height: 0; overflow: hidden; transition: max-height .4s ease; }
+.comp-card.active .comp-tags { max-height: 80px; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 1px solid var(--border2); color: var(--muted); font-family: var(--mono); }
+
+/* SIGNAL */
+.signal-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2rem; }
+.signal-state { background: var(--bg2); padding: 1.75rem 1.5rem; position: relative; }
+.signal-state::after { content: attr(data-state); display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .75rem; }
+.signal-action { font-family: var(--serif); font-size: 1.05rem; margin-bottom: .5rem; }
+.signal-cond { font-size: 11.5px; color: var(--muted); font-family: var(--mono); line-height: 1.6; }
+.s-open::after  { color: var(--accent3); }
+.s-wait::after  { color: var(--accent); }
+.s-hold::after  { color: var(--accent2); }
+.s-close::after { color: var(--danger); }
+
+/* ARCH LAYERS */
+.arch-layers { display: flex; flex-direction: column; gap: 1.5px; border-radius: var(--radius-lg); overflow: hidden; background: var(--border); margin-bottom: 2rem; }
+.arch-layer { background: var(--bg2); padding: 1.75rem 2rem; display: grid; grid-template-columns: 180px 1fr; gap: 2rem; align-items: start; }
+.layer-label { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding-top: 2px; }
+.layer-label span { display: block; font-family: var(--serif); font-size: 1.05rem; color: var(--text); text-transform: none; letter-spacing: 0; margin-top: 4px; }
+.layer-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border2); color: var(--text); }
+.chip.hl { border-color: rgba(200,181,96,0.4); color: var(--accent); background: rgba(200,181,96,0.05); }
+.chip.bl { border-color: rgba(91,143,212,0.4); color: var(--accent2); background: rgba(91,143,212,0.05); }
+.chip.gl { border-color: rgba(109,196,154,0.4); color: var(--accent3); background: rgba(109,196,154,0.05); }
+
+/* PHASES */
+.phases-timeline { position: relative; }
+.phases-timeline::before { content: ''; position: absolute; left: 32px; top: 0; bottom: 0; width: 1px; background: var(--border2); }
+.phase-item { display: grid; grid-template-columns: 64px 1fr; gap: 2rem; margin-bottom: 2rem; cursor: pointer; }
+.phase-dot { width: 64px; display: flex; flex-direction: column; align-items: center; }
+.phase-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border2); background: var(--bg); position: relative; z-index: 1; margin-top: 8px; transition: border-color .3s, background .3s; }
+.phase-item.active .phase-circle { border-color: var(--accent); background: var(--accent); }
+.phase-body-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color .3s; }
+.phase-item.active .phase-body-card { border-color: rgba(200,181,96,0.22); }
+.phase-header-row { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); }
+.phase-num-badge { font-family: var(--mono); font-size: 11px; color: var(--muted); background: var(--bg); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border2); }
+.phase-duration { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+.phase-title { font-family: var(--serif); font-size: 1.3rem; padding: 1.25rem 2rem .5rem; }
+.phase-subtitle { font-size: 13.5px; color: var(--muted); padding: 0 2rem 1.25rem; line-height: 1.7; }
+.phase-detail { padding: 0 2rem 2rem; display: none; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.phase-item.active .phase-detail { display: grid; }
+.detail-col h4 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: .75rem; font-weight: 500; }
+.detail-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.detail-list li { font-size: 13px; color: var(--muted); padding-left: 1rem; position: relative; line-height: 1.5; }
+.detail-list li::before { content: '—'; position: absolute; left: 0; color: var(--border2); }
+.phase-value { margin: 0 2rem 2rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; font-size: 13px; color: var(--text); line-height: 1.7; }
+
+/* CLOSING */
+#closing { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; }
+.closing-h { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.1; margin-bottom: 1.5rem; font-weight: 400; }
+.closing-h em { font-style: italic; color: var(--accent); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .55s ease, transform .55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  section { padding: 100px 1.5rem 60px; }
+  #hero { padding: 0 1.5rem; }
+  .components-grid { grid-template-columns: 1fr; }
+  .signal-flow { grid-template-columns: 1fr 1fr; }
+  .phase-detail { grid-template-columns: 1fr; }
+  .arch-layer { grid-template-columns: 1fr; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+
+<nav>
+  <div class="nav-logo">FR // ARB</div>
+  <ul class="nav-links">
+    <li><a href="#conceito">Conceito</a></li>
+    <li><a href="#componentes">Componentes</a></li>
+    <li><a href="#sinal">Sinal</a></li>
+    <li><a href="#dados">Dados</a></li>
+    <li><a href="#fases">Roadmap</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">Crypto Derivatives · Funding Rate Arbitrage · 2026</p>
+  <h1 class="hero-h1">Uma estratégia sistêmica<br>para capturar o <em>carry</em><br>em perpetual futures</h1>
+  <p class="hero-lead">O funding rate em mercados de cripto não é ruído. É o reflexo mensurável de desequilíbrios estruturais de demanda por alavancagem — e pode ser decomposto, modelado e arbitrado com rigor quantitativo.</p>
+  <div class="hero-stats">
+    <div class="stat-item"><span class="stat-num">&gt; $100B</span><span class="stat-label">volume diário em perps</span></div>
+    <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">componentes do carry</span></div>
+    <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">fases de construção</span></div>
+    <div class="stat-item"><span class="stat-num">2</span><span class="stat-label">venues iniciais</span></div>
+  </div>
+  <div class="hero-scroll">scroll para explorar</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONCEITO -->
+<section id="conceito">
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="ticker-item">BTC/USDT &nbsp;<span class="ti-val">funding +0.0082%</span></span>
+      <span class="ticker-item">ETH/USDT &nbsp;<span class="ti-val">funding +0.0061%</span></span>
+      <span class="ticker-item">SOL/USDT &nbsp;<span class="ti-val">funding +0.0105%</span></span>
+      <span class="ticker-item">carry líquido BTC &nbsp;<span class="ti-val">+12.4% a.a.</span></span>
+      <span class="ticker-item">r_friction estimado &nbsp;<span class="ti-neg">−4.1% a.a.</span></span>
+      <span class="ticker-item">r_risk proxy &nbsp;<span class="ti-neg">−3.8% a.a.</span></span>
+      <span class="ticker-item">Binance ↔ Gate.io spread &nbsp;<span class="ti-val">+0.0021%</span></span>
+      <span class="ticker-item">BTC/USDT &nbsp;<span class="ti-val">funding +0.0082%</span></span>
+      <span class="ticker-item">ETH/USDT &nbsp;<span class="ti-val">funding +0.0061%</span></span>
+      <span class="ticker-item">SOL/USDT &nbsp;<span class="ti-val">funding +0.0105%</span></span>
+      <span class="ticker-item">carry líquido BTC &nbsp;<span class="ti-val">+12.4% a.a.</span></span>
+      <span class="ticker-item">r_friction estimado &nbsp;<span class="ti-neg">−4.1% a.a.</span></span>
+      <span class="ticker-item">r_risk proxy &nbsp;<span class="ti-neg">−3.8% a.a.</span></span>
+      <span class="ticker-item">Binance ↔ Gate.io spread &nbsp;<span class="ti-val">+0.0021%</span></span>
+    </div>
+  </div>
+
+  <p class="sec-tag reveal">O mecanismo</p>
+  <h2 class="sec-h2 reveal">Como o funding rate<br>funciona como <em style="font-style:italic;color:var(--accent)">motor</em> da estratégia</h2>
+  <p class="sec-lead reveal">Perpetual futures não expiram — e por isso precisam de um mecanismo para manter o preço ancorado ao spot. Esse mecanismo é o funding rate: quem está comprado paga a quem está vendido a cada 8 horas, proporcionalmente ao gap entre os dois preços. Nossa estratégia coleta esse pagamento.</p>
+
+  <div class="equation-box reveal">
+    <p class="eq-label">A equação central do projeto</p>
+    <p class="eq-formula">
+      <span class="main">carry_líquido</span><span class="op"> = </span><span class="pos">r_base</span><span class="op"> + </span><span class="pos">r_carry</span><span class="op"> + </span><span class="pos">r_sentiment</span><span class="op"> − </span><span class="neg">r_friction</span><span class="op"> − </span><span class="neg">r_risk</span>
+    </p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;" class="reveal">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;">
+      <p style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:var(--mono);">A estratégia base</p>
+      <p style="font-family:var(--serif);font-size:1.2rem;margin-bottom:.75rem;">Cash-and-carry delta-neutral</p>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.7;">Comprar o ativo no mercado spot e simultaneamente vender o perpetual futuro. A posição é neutra ao preço — lucra apenas com o fluxo de funding recebido de quem está comprado no perp.</p>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.75rem 2rem;">
+      <p style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;font-family:var(--mono);">Por que o carry persiste</p>
+      <p style="font-family:var(--serif);font-size:1.2rem;margin-bottom:.75rem;">Limites estruturais à arbitragem</p>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.7;">O prêmio não é zerado porque a arbitragem tem custos reais: fees, spread, margem imobilizada e risco de liquidação. Esses custos formam uma barreira permanente — e calculá-los é o que diferencia o modelo de uma análise ingênua.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPONENTES -->
+<section id="componentes">
+  <p class="sec-tag reveal">Decomposição</p>
+  <h2 class="sec-h2 reveal">Os cinco componentes<br>do funding rate</h2>
+  <p class="sec-lead reveal">O número que você vê na tela da exchange é a soma de cinco forças distintas. Clique em cada componente para expandir. Decompô-las individualmente é o que permite decidir se um carry é capturável — e quanto risco está embutido.</p>
+
+  <div class="components-grid reveal">
+    <div class="comp-card active" style="--accent-c: var(--accent3);" onclick="toggleComp(this)">
+      <p class="comp-num">01 · adiciona ao carry</p>
+      <p class="comp-name" style="color:var(--accent3);">r_base — taxa de referência</p>
+      <p class="comp-formula">lending_rate_usdc_apy</p>
+      <p class="comp-desc">O piso neutro do funding. Converge para a taxa de empréstimo de stablecoin em DeFi — AAVE ou Compound. É o custo de capital alternativo do arbitrageur: se o funding não supera nem isso, não há prêmio real.</p>
+      <div class="comp-tags"><span class="tag">AAVE v3</span><span class="tag">Compound</span><span class="tag">CME implied</span></div>
+    </div>
+
+    <div class="comp-card" style="--accent-c: var(--accent3);" onclick="toggleComp(this)">
+      <p class="comp-num">02 · adiciona ao carry</p>
+      <p class="comp-name" style="color:var(--accent3);">r_carry — conveniência estrutural</p>
+      <p class="comp-formula">basis_anualizado − r_base − custody</p>
+      <p class="comp-desc">O prêmio persistente que investidores pagam para ter exposição sintética sem deter o ativo. É o coração do funding positivo crônico — existe mesmo sem euforia, sustentado pela preferência estrutural por futuros vs spot.</p>
+      <div class="comp-tags"><span class="tag">basis anualizado</span><span class="tag">OI × taker</span><span class="tag">long/short ratio</span></div>
+    </div>
+
+    <div class="comp-card" style="--accent-c: var(--accent);" onclick="toggleComp(this)">
+      <p class="comp-num">03 · adiciona — mas use como filtro</p>
+      <p class="comp-name" style="color:var(--accent);">r_sentiment — posicionamento</p>
+      <p class="comp-formula">(ls_ratio−1)×α + (taker−0.5)×β + oi_Δ×γ</p>
+      <p class="comp-desc">O componente mais volátil. Captura o excesso de longs vs shorts em determinado momento. Quando muito alto, é um sinal de alerta — não de oportunidade — pois prediz reversão brusca via liquidações em cascata.</p>
+      <div class="comp-tags"><span class="tag">long/short ratio</span><span class="tag">taker buy ratio</span><span class="tag">OI change 24h</span></div>
+    </div>
+
+    <div class="comp-card" style="--accent-c: var(--danger);" onclick="toggleComp(this)">
+      <p class="comp-num">04 · subtrai do carry</p>
+      <p class="comp-name" style="color:var(--danger);">r_friction — custos de execução</p>
+      <p class="comp-formula">(fees + spread×2) × giros × 2 + margem</p>
+      <p class="comp-desc">O que você realmente paga para montar a operação: fees de taker nos dois mercados, spread bid-ask cruzado dos dois lados, custo de oportunidade da margem imobilizada. Em ativos ilíquidos, pode consumir 30–50% do carry bruto.</p>
+      <div class="comp-tags"><span class="tag">fee VIP tier</span><span class="tag">bid-ask spread</span><span class="tag">margin cost</span></div>
+    </div>
+
+    <div class="comp-card" style="grid-column: span 2; --accent-c: var(--danger);" onclick="toggleComp(this)">
+      <p class="comp-num">05 · subtrai do carry</p>
+      <p class="comp-name" style="color:var(--danger);">r_risk — prêmio de risco exigido</p>
+      <p class="comp-formula">iv×0.08 + max(rr,0)×0.5 + (oi_conc−50)/100×3</p>
+      <p class="comp-desc">O retorno exigido para compensar riscos que não aparecem no P&L diário mas materializam-se em eventos extremos: funding que reverte antes da janela de 8h, margin call em volatilidade extrema, risco de contraparte da exchange, e basis risk entre venues. Calculado via IV implícita, risk reversal de 25 delta e concentração de OI.</p>
+      <div class="comp-tags"><span class="tag">IV 30d ATM</span><span class="tag">25d risk reversal</span><span class="tag">OI concentration</span><span class="tag">insurance fund</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SINAL -->
+<section id="sinal">
+  <p class="sec-tag reveal">Geração de sinal</p>
+  <h2 class="sec-h2 reveal">Quatro estados.<br>Uma decisão a cada<br><em style="font-style:italic;color:var(--accent)">8 horas.</em></h2>
+  <p class="sec-lead reveal">O carry líquido calculado a cada janela de funding determina o estado do sistema. Não é binário — é um autômato com histéresis para evitar giro excessivo por ruído de mercado.</p>
+
+  <div class="signal-flow reveal">
+    <div class="signal-state s-open" data-state="OPEN · abrir">
+      <p class="signal-action">Long spot<br>+ Short perp</p>
+      <p class="signal-cond">carry_líq ≥ open_th<br>E sentiment ≤ máx</p>
+    </div>
+    <div class="signal-state s-wait" data-state="WAIT · aguardar">
+      <p class="signal-action">Não abrir.<br>Monitorar.</p>
+      <p class="signal-cond">carry atrativo<br>mas sentiment alto</p>
+    </div>
+    <div class="signal-state s-hold" data-state="HOLD · manter">
+      <p class="signal-action">Manter posição<br>existente.</p>
+      <p class="signal-cond">carry entre<br>close_th e open_th</p>
+    </div>
+    <div class="signal-state s-close" data-state="CLOSE · encerrar">
+      <p class="signal-action">Fechar long<br>e short perp.</p>
+      <p class="signal-cond">carry_líq &lt; close_th<br>ou r_risk subiu</p>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.5rem;" class="reveal">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;">
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:.5rem;">OPEN THRESHOLD</p>
+      <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent3);">8% a.a.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:.25rem;">Cobre r_friction típico + margem</p>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;">
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:.5rem;">CLOSE THRESHOLD</p>
+      <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent2);">3% a.a.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:.25rem;">Histéresis — evita giro por ruído</p>
+    </div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;">
+      <p style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:.5rem;">SENTIMENT MAX</p>
+      <p style="font-family:var(--serif);font-size:1.6rem;color:var(--accent);">20% a.a.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:.25rem;">Limita exposição em topos de euforia</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- DADOS -->
+<section id="dados">
+  <p class="sec-tag reveal">Infraestrutura</p>
+  <h2 class="sec-h2 reveal">Duas camadas de dados.<br>Um schema <em style="font-style:italic;color:var(--accent)">canônico.</em></h2>
+  <p class="sec-lead reveal">A arquitetura separa o que a exchange retornou — imutável, cru — do que o modelo precisa — processado, normalizado. Essa separação garante reprodutibilidade do backtest e escalabilidade para novas venues.</p>
+
+  <div class="arch-layers reveal">
+    <div class="arch-layer">
+      <div class="layer-label">Fontes iniciais<span>Binance · Gate.io</span></div>
+      <div class="layer-chips">
+        <span class="chip hl">REST API</span><span class="chip hl">WebSocket</span>
+        <span class="chip">BTC · ETH · SOL · BNB · XRP</span><span class="chip">janela 8h</span>
+      </div>
+    </div>
+    <div class="arch-layer" style="border-top:1px solid var(--border);">
+      <div class="layer-label">Camada 1<span>Data Mesh · cru</span></div>
+      <div class="layer-chips">
+        <span class="chip hl">funding_rate raw</span><span class="chip hl">mark / index price</span>
+        <span class="chip hl">OI · liquidations</span><span class="chip hl">order book L2</span>
+        <span class="chip">taker volume</span><span class="chip">long/short ratio</span>
+        <span class="chip">Parquet · imutável · particionado</span>
+      </div>
+    </div>
+    <div class="arch-layer" style="border-top:1px solid var(--border);">
+      <div class="layer-label">Pipeline<span>Normalização</span></div>
+      <div class="layer-chips">
+        <span class="chip">alinhamento temporal</span><span class="chip">schema canônico</span>
+        <span class="chip">deduplicação</span><span class="chip">qualidade de dado</span>
+      </div>
+    </div>
+    <div class="arch-layer" style="border-top:1px solid var(--border);">
+      <div class="layer-label">Camada 2<span>Data Lake · features</span></div>
+      <div class="layer-chips">
+        <span class="chip bl">funding dynamics</span><span class="chip bl">market pressure</span>
+        <span class="chip bl">limits to arbitrage</span><span class="chip gl">convenience yield</span>
+        <span class="chip gl">on-chain signals</span><span class="chip gl">macro factors</span>
+        <span class="chip">rolling stats 1d/7d/30d</span><span class="chip">z-score cross-venue</span>
+      </div>
+    </div>
+    <div class="arch-layer" style="border-top:1px solid var(--border);">
+      <div class="layer-label">Output<span>Modelos · Sinal</span></div>
+      <div class="layer-chips">
+        <span class="chip hl">carry líquido por ativo</span><span class="chip hl">sinal open/hold/close</span>
+        <span class="chip hl">forecasting t+1/t+3</span><span class="chip">backtest walk-forward</span>
+        <span class="chip">P&amp;L realizado vs esperado</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FASES -->
+<section id="fases">
+  <p class="sec-tag reveal">Roadmap</p>
+  <h2 class="sec-h2 reveal">Quatro fases.<br>Do <em style="font-style:italic;color:var(--accent)">MVP</em> ao sistema completo.</h2>
+  <p class="sec-lead reveal">Cada fase entrega valor independente e serve de base para a próxima. Clique em cada fase para ver os detalhes. O projeto não depende de chegar à Fase 4 para ser útil.</p>
+
+  <div class="phases-timeline reveal">
+
+    <div class="phase-item active" onclick="togglePhase(this)">
+      <div class="phase-dot"><div class="phase-circle"></div></div>
+      <div class="phase-body-card">
+        <div class="phase-header-row">
+          <span class="phase-num-badge">Fase 1</span>
+          <span class="phase-duration">2–3 semanas · sem infra permanente</span>
+        </div>
+        <p class="phase-title">MVP — monitor de funding e carry bruto</p>
+        <p class="phase-subtitle">Visibilidade em tempo quase-real do carry entre Binance e Gate.io para BTC e ETH. Decisão manual baseada no carry simplificado. Objetivo: começar a acumular histórico e aprender onde os dados têm gaps.</p>
+        <div class="phase-detail">
+          <div class="detail-col">
+            <h4>Dados coletados</h4>
+            <ul class="detail-list">
+              <li>funding_rate (8h), mark e index price</li>
+              <li>basis bruto, OHLCV 1h</li>
+              <li>BTC e ETH · REST polling cron</li>
+              <li>r_base via AAVE API (externo)</li>
+            </ul>
+          </div>
+          <div class="detail-col">
+            <h4>Entregas</h4>
+            <ul class="detail-list">
+              <li>funding observado % a.a.</li>
+              <li>carry bruto = funding − r_friction fixo</li>
+              <li>dashboard simples / notebook</li>
+              <li>30 dias de histórico acumulando</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase-value">Valor entregue: primeira visibilidade do prêmio real, diferencial de funding entre venues e mapeamento dos fee schedules reais por tier de volume.</div>
+      </div>
+    </div>
+
+    <div class="phase-item" onclick="togglePhase(this)">
+      <div class="phase-dot"><div class="phase-circle"></div></div>
+      <div class="phase-body-card">
+        <div class="phase-header-row">
+          <span class="phase-num-badge">Fase 2</span>
+          <span class="phase-duration">4–6 semanas · pipeline permanente mínimo</span>
+        </div>
+        <p class="phase-title">Data pipeline + decomposição completa dos 5 componentes</p>
+        <p class="phase-subtitle">O pipeline vira permanente, o schema canônico é fixado e todos os cinco componentes do carry são calculados com série histórica. Primeiros backtests estáticos e sinal automático de open/close.</p>
+        <div class="phase-detail">
+          <div class="detail-col">
+            <h4>Dados incrementais</h4>
+            <ul class="detail-list">
+              <li>OI, taker volume, long/short ratio</li>
+              <li>Liquidation events, bid-ask snapshot</li>
+              <li>WebSocket + REST em paralelo</li>
+              <li>Expansão: SOL, BNB, XRP</li>
+            </ul>
+          </div>
+          <div class="detail-col">
+            <h4>Capacidades novas</h4>
+            <ul class="detail-list">
+              <li>Decomposição dos 5 componentes</li>
+              <li>Sinal open/close automático</li>
+              <li>Comparação cross-venue de carry</li>
+              <li>Primeiros backtests estáticos</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase-value">Valor entregue: base de dados limpa, carry líquido para 5 ativos em 2 venues, e primeiro backtest documentado com Sharpe ratio e custos reais incluídos.</div>
+      </div>
+    </div>
+
+    <div class="phase-item" onclick="togglePhase(this)">
+      <div class="phase-dot"><div class="phase-circle"></div></div>
+      <div class="phase-body-card">
+        <div class="phase-header-row">
+          <span class="phase-num-badge">Fase 3</span>
+          <span class="phase-duration">6–8 semanas · feature store + backtesting estruturado</span>
+        </div>
+        <p class="phase-title">Modelo preditivo + backtesting walk-forward</p>
+        <p class="phase-subtitle">O sistema deixa de ser um monitor e vira um modelo quantitativo que prevê se o carry líquido estará acima do threshold nas próximas 1–3 janelas de funding. Backtest walk-forward com métricas robustas.</p>
+        <div class="phase-detail">
+          <div class="detail-col">
+            <h4>Dados incrementais</h4>
+            <ul class="detail-list">
+              <li>IV implícita (Deribit), risk reversal</li>
+              <li>Predicted rate das exchanges</li>
+              <li>Rolling stats 7d/30d de funding</li>
+              <li>Stablecoin rates, gas fees ETH</li>
+            </ul>
+          </div>
+          <div class="detail-col">
+            <h4>Capacidades novas</h4>
+            <ul class="detail-list">
+              <li>Forecasting de carry (t+1, t+3)</li>
+              <li>r_risk completo via IV + RR</li>
+              <li>Backtest walk-forward com custos reais</li>
+              <li>Detecção de regime bull/bear/sideways</li>
+              <li>Otimização de thresholds open/close</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase-value">Valor entregue: base quantitativa sólida para decisões de sizing e timing. Modelo com Sharpe out-of-sample documentado, análise de drawdown e liquidation risk.</div>
+      </div>
+    </div>
+
+    <div class="phase-item" onclick="togglePhase(this)">
+      <div class="phase-dot"><div class="phase-circle"></div></div>
+      <div class="phase-body-card">
+        <div class="phase-header-row">
+          <span class="phase-num-badge">Fase 4</span>
+          <span class="phase-duration">8–12 semanas · execução + expansão de venues</span>
+        </div>
+        <p class="phase-title">Execução semi-automática + arbitragem cross-venue</p>
+        <p class="phase-subtitle">O sinal gerado pelo modelo alimenta um executor — mas sempre com aprovação humana no loop. Expansão para DEX perps e dados macro. Sizing dinâmico e gestão de risco integrada.</p>
+        <div class="phase-detail">
+          <div class="detail-col">
+            <h4>Dados incrementais</h4>
+            <ul class="detail-list">
+              <li>L2 order book profundo, tick trades</li>
+              <li>DEX perps (HyperLiquid)</li>
+              <li>CME futures (basis cross-venue)</li>
+              <li>DXY, VIX, stablecoin supply</li>
+            </ul>
+          </div>
+          <div class="detail-col">
+            <h4>Capacidades novas</h4>
+            <ul class="detail-list">
+              <li>Execução com aprovação humana obrigatória</li>
+              <li>Sizing dinâmico por carry e volatilidade</li>
+              <li>Arb cross-venue CEX ↔ DEX</li>
+              <li>Alerta preventivo de margin call</li>
+              <li>P&L realizado vs backtest esperado</li>
+            </ul>
+          </div>
+        </div>
+        <div class="phase-value">Valor entregue: sistema completo com feedback loop entre P&L realizado e recalibração de parâmetros. O humano no loop não é limitação — em estratégias com risco de liquidação, é uma feature arquitetural.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CLOSING -->
+<section id="closing">
+  <p class="sec-tag reveal">Princípios</p>
+  <h2 class="closing-h reveal">Dados limpos antes<br>de modelo complexo.<br><em>Valor em cada fase.</em></h2>
+  <p style="font-size:1.05rem;color:var(--muted);max-width:600px;font-weight:300;line-height:1.8;margin-top:1.5rem;" class="reveal">O modelo de dois fatores — basis e price-volume — já explica a maior parte do sinal. Complexidade adicional entra apenas quando os dados da Fase 2 demonstrarem sinal residual não capturado. Backtesting honesto, com custos reais, é o único número que importa.</p>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:3rem;" class="reveal">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;font-size:12px;color:var(--muted);font-family:var(--mono);">schema first · dados imutáveis</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;font-size:12px;color:var(--muted);font-family:var(--mono);">humano no loop até fase 4</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;font-size:12px;color:var(--muted);font-family:var(--mono);">sharpe com custos reais</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;font-size:12px;color:var(--muted);font-family:var(--mono);">cada fase entrega valor</div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.5rem;font-size:12px;color:var(--muted);font-family:var(--mono);">Binance + Gate.io → CEX+DEX</div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin-top:4rem;font-family:var(--mono);opacity:.35;">Base acadêmica: He et al. (2024) · Ackerer et al. (2025) · Schmeling, Schrimpf, Todorov (2025) · Christin et al. · Cao et al. (2024) · Zhivkov (2026)</p>
+</section>
+
+<script>
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (window.scrollY / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct.toFixed(1) + '%';
+});
+
+const reveals = document.querySelectorAll('.reveal');
+const revObs = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), i * 70);
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => revObs.observe(el));
+
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.35 });
+sections.forEach(s => navObs.observe(s));
+
+function toggleComp(el) { el.classList.toggle('active'); }
+
+function togglePhase(el) {
+  const was = el.classList.contains('active');
+  document.querySelectorAll('.phase-item').forEach(p => p.classList.remove('active'));
+  if (!was) el.classList.add('active');
+}
+</script>
+</body>
+</html>
