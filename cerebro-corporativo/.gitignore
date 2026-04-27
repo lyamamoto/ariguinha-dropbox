@@ -1,0 +1,59 @@
+# ============================================================
+# CRÍTICO — Pasta de carreira NUNCA vai para o repo corporativo
+# ============================================================
+# Esta pasta contém ambições, leitura política, plano B e
+# avaliações privadas. Conteúdo legalmente é seu, não da empresa.
+# Mantenha apenas localmente. Faça backup em drive PESSOAL.
+70-career/*
+# Exceção: o README explicativo da pasta vai para o repo, para que
+# fique documentado o porquê da pasta existir e estar vazia
+!70-career/README.md
+
+# ============================================================
+# Obsidian — estado local (não compartilhar)
+# ============================================================
+.obsidian/workspace*
+.obsidian/cache
+.obsidian/plugins/*/data.json
+# Mantém configuração base do Obsidian versionada (útil se mudar de máquina)
+!.obsidian/app.json
+!.obsidian/core-plugins.json
+!.obsidian/community-plugins.json
+!.obsidian/appearance.json
+
+# ============================================================
+# Sistema operacional e editores
+# ============================================================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# ============================================================
+# Credenciais e segredos — NUNCA commitar
+# ============================================================
+.env
+.env.local
+*.key
+*.pem
+secrets/
+
+# ============================================================
+# Anexos pesados (configurar Git LFS se necessário)
+# ============================================================
+attachments/*.mp4
+attachments/*.mov
+attachments/*.zip
+attachments/*.pdf
+
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.pyc
+
+# ============================================================
+# Logs
+# ============================================================
+*.log
