@@ -1,63 +1,120 @@
 # Resolução BCB 519/2025 --- Autorização das SPSAVs
 
-## 1. Função da norma
+## Resumo executivo
 
-A Resolução BCB 519 disciplina processos de autorização relacionados,
-entre outros segmentos, às Sociedades Prestadoras de Serviços de Ativos
-Virtuais (SPSAVs). Se a Lei 14.478 diz que a atividade passa a ter um
-gate regulatório, a 519 explica como atravessar esse gate.
+A BCB 519 transforma a exigência abstrata de autorização da Lei 14.478
+em **processo administrativo concreto**. Ela disciplina processos de
+autorização de SPSAVs e de determinadas corretoras/distribuidoras. Para
+crypto, a pergunta é: o BCB considera entidade, controladores,
+administradores, capital, infraestrutura, governança e projeto adequados
+para entrar/permanecer no perímetro regulado?
 
-## 2. Quem deve olhar para ela
+Leia junto com a 520: **519 = gate de autorização; 520 =
+funcionamento**.
 
-É central para empresas que pretendem constituir uma SPSAV ou que já
-prestavam serviços de ativos virtuais e precisam se enquadrar no regime
-de transição. Também importa para bancos e outras instituições que fazem
-due diligence de contrapartes cripto.
+## 1. Por que existe autorização
 
-## 3. O que o BCB quer avaliar
+Empresas cripto podem receber recursos, ativos e ordens de terceiros,
+controlar private keys e operar 24/7. Autorização não garante que nunca
+quebrarão; cria filtro institucional, accountability e supervisão
+contínua.
 
-O processo de autorização permite ao BCB analisar estrutura societária e
-de controle, capacidade econômico-financeira, origem de recursos,
-administradores, governança, infraestrutura e compatibilidade entre o
-projeto de negócio e a capacidade de operar de forma segura.
+## 2. Âmbito
 
-## 4. Regime de transição
+A norma disciplina autorização de sociedades corretoras de câmbio,
+CTVMs, DTVMs e SPSAVs. Isso mostra que o BCB coloca crypto próximo à
+arquitetura de intermediários financeiros, não de empresas de software
+comuns.
 
-Um tema-chave é a passagem das empresas que já operavam antes do novo
-regime para o universo autorizado. Não basta concluir que uma empresa
-"já existia"; é necessário verificar em qual situação regulatória ela
-está e se cumpre os marcos e prazos aplicáveis.
+## 3. O que o regulador precisa entender
 
-## 5. Autorização não é sinônimo de produto aprovado
+O processo procura responder: - quem controla? - de onde vem o
+capital? - controladores/administradores são adequados? - há capacidade
+econômico-financeira? - governança é compatível? - modelo de negócio é
+claro? - controles e infraestrutura suportam o negócio? - a instituição
+consegue cumprir regras continuamente?
 
-A autorização institucional não significa que qualquer produto, token ou
-fluxo imaginável esteja automaticamente autorizado. Produtos podem
-acionar regras de câmbio, valores mobiliários, PLD/FT, consumidor,
-prudencial, tributação ou outras.
+## 4. Controladores e grupo
 
-## 6. Aplicação para bancos
+Grupos crypto frequentemente têm entidade brasileira, exchange offshore,
+custodiante externo e empresa de tecnologia. Due diligence deve mapear:
+`marca → entidade contratante → controlador → afiliadas → venue/custodiante → fluxo de recursos`.
 
-Para uma instituição financeira, o status regulatório da contraparte
-torna-se parte da arquitetura de onboarding e monitoring. Sistemas
-precisam distinguir entidade autorizada, em processo válido de
-autorização e entidade fora do perímetro permitido, conforme as regras
-de transição e relacionamento aplicáveis.
+A marca comercial não é a contraparte jurídica.
 
-## 7. Exemplo
+## 5. Administradores
 
-Uma exchange internacional quer receber BRL de clientes brasileiros e
-entregar stablecoin. A pergunta "ela é grande e confiável?" não é
-suficiente. É preciso perguntar: qual entidade jurídica presta o serviço
-no Brasil? Qual é seu status perante o BCB? Qual serviço está
-autorizado? O fluxo usa outra entidade do grupo?
+Infraestrutura que controla recursos de clientes precisa de pessoas
+identificáveis e responsáveis. O modelo regulado é incompatível com
+governança materialmente anônima ou informal.
 
-## 8. Como memorizar
+## 6. Capital
 
-**519 = autorização e entrada no perímetro regulado.**
+Valuation, funding de venture capital e token próprio não equivalem
+automaticamente a capital regulatório. A capacidade patrimonial deve ser
+compatível com atividade e requisitos aplicáveis.
 
-## 9. Fonte primária
+## 7. Plano de negócios
 
--   Banco Central --- Resolução BCB 519:
-    https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=519&tipo=Resolu%C3%A7%C3%A3o+BCB
+"Plataforma crypto" é descrição insuficiente. É necessário decompor
+intermediação, custody, exchange, transfer, execution, fiat rails, redes
+suportadas e terceiros críticos.
 
-> Material educacional; não constitui parecer jurídico.
+## 8. Tecnologia
+
+Em SPSAV, tecnologia é controle financeiro. O processo precisa ser
+compatível com segurança de wallets, autenticação, segregação de
+funções, logs, reconciliação, continuidade e resposta a incidentes.
+
+## 9. Mudanças posteriores
+
+Autorização não é evento único. Mudanças societárias e outros eventos
+definidos podem exigir autorização/comunicação. M&A de VASP não deve ser
+tratado como simples aquisição de software.
+
+## 10. Transição
+
+Empresa que já operava antes do novo regime não deve ser classificada
+simplesmente como "autorizada". Em 2026 é essencial distinguir: -
+autorizada; - em processo válido de autorização; - coberta por
+transição; - fora do perímetro permitido.
+
+## 11. Conexão com BCB 520, art. 91
+
+A partir de 30/10/2026, instituições autorizadas pelo BCB sofrem vedação
+de realizar/viabilizar operações com VASPs que não estejam autorizadas
+ou em processo de autorização no País, salvo exceções previstas.
+
+Assim, o status na 519 vira atributo crítico também para **bancos que
+mantêm rails para VASPs**.
+
+## 12. Entidade autorizada não significa produto automaticamente permitido
+
+Ainda é necessário perguntar: - atividade está no escopo? - há câmbio? -
+há security/derivativo? - há entidade offshore? - quem faz custody? - o
+produto exige outro regime?
+
+## 13. Exemplo de onboarding
+
+Exchange global quer conta BRL: 1. qual entidade recebe BRL? 2. quem
+executa crypto? 3. quem custodia? 4. entidade brasileira está
+autorizada/em processo? 5. offshore vira contraparte? 6. há câmbio? 7.
+quais terceiros críticos? 8. como se reconcilia fiat ↔ crypto?
+
+## 14. Arquitetura de dados
+
+Cadastro institucional deveria guardar `legal_entity`,
+`regulatory_status`, `authorization_process`, `permitted_activities`,
+`jurisdiction`, `effective_dates`, `custody_provider`,
+`execution_venues` e `review_date`.
+
+Isso permite bloqueio sistêmico quando status muda.
+
+## 15. Como memorizar
+
+**519 = quem pode atravessar o portão regulatório e sob quais
+processos.**
+
+## Fonte
+
+-   https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=519&tipo=Resolu%C3%A7%C3%A3o+BCB

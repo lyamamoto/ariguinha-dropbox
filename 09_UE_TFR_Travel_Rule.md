@@ -1,56 +1,108 @@
-# EU Transfer of Funds Regulation (TFR) --- Travel Rule para cripto
+# TFR --- Regulation (EU) 2023/1113 e Travel Rule
 
-## 1. O que é
+## Resumo executivo
 
-O Regulamento (UE) 2023/1113 atualiza o regime europeu de informações
-que acompanham transferências de fundos e estende requisitos específicos
-às transferências de determinados criptoativos.
+O TFR estende a transferências de cripto a lógica de que **informação
+sobre quem envia e recebe acompanha o valor**. Blockchain registra
+`address A → address B`, mas não identidade civil. Travel Rule cria a
+camada de identidade/compliance. As Guidelines da EBA são aplicáveis
+desde 30/12/2024.
 
-## 2. Ideia da Travel Rule
+## 1. Problema
 
-A blockchain mostra endereços e transações, mas normalmente não mostra a
-identidade civil do originador e beneficiário. A Travel Rule cria uma
-camada de informação que "viaja" entre instituições junto ao fluxo.
+Banco: `João/Banco A → Maria/Banco B`.\
+Blockchain: `0xABC → 0xDEF`.
 
-## 3. Informações
+A segunda prova movimentação entre endereços, não quem são as pessoas.
 
-CASPs precisam coletar/transmitir/verificar informações relevantes sobre
-originador e beneficiário conforme o caso. Isso aproxima transferências
-cripto dos controles já existentes em pagamentos tradicionais.
+## 2. O que viaja
 
-## 4. Self-hosted wallets
+Informações exigidas sobre originador/beneficiário são obtidas e
+transmitidas/associadas à transferência conforme o regime.
 
-Transferências envolvendo endereços não hospedados por outro CASP são
-uma área operacionalmente importante. O fato de uma carteira ser
-self-hosted não torna o fluxo automaticamente proibido, mas pode exigir
-controles e verificações adicionais conforme as regras aplicáveis.
+## 3. PII não vai para a blockchain
 
-## 5. Travel Rule ≠ blockchain analytics
+Travel Rule não significa gravar passaporte em Ethereum. Dados são
+trocados por canais adequados entre participantes.
 
-São coisas complementares: - Travel Rule: identidade/informações
-transmitidas entre participantes. - Blockchain analytics: avaliação de
-histórico on-chain, exposição a riscos e padrões. Uma instituição madura
-normalmente precisa das duas camadas.
+## 4. CASP originador
 
-## 6. Problema de interoperabilidade
+Obtém informações, verifica quando aplicável e assegura que a
+transferência tenha os elementos necessários.
 
-O desafio real não é só regulatório: diferentes CASPs precisam trocar
-dados de forma segura e associá-los à transação correta. Isso exige
-protocolos, matching, privacy e tratamento de exceções.
+## 5. CASP beneficiário
 
-## 7. Exemplo
+Detecta dados ausentes/incompletos e possui procedimentos para executar,
+suspender, rejeitar ou pedir informação adicional conforme risco/regras.
 
-Exchange A envia USDC para Exchange B. A transação Ethereum contém
-addresses e valor. A camada Travel Rule permite que B receba informações
-regulatórias sobre originador/beneficiário além do que existe on-chain.
+## 6. Intermediários
 
-## 8. Como memorizar
+Fluxos com múltiplos participantes precisam preservar associação entre
+mensagem regulatória e transferência.
 
-**TFR = identidade regulatória acompanha a transferência cripto.**
+## 7. Self-hosted wallets
 
-## 9. Fonte primária
+Não há outro CASP do outro lado. Isso exige tratamento próprio e, em
+certas condições, medidas adicionais para verificar ownership/control.
 
--   EUR-Lex --- Regulamento (UE) 2023/1113:
-    https://eur-lex.europa.eu/eli/reg/2023/1113/oj
+## 8. Verificação
 
-> Material educacional; não constitui parecer jurídico.
+Técnicas podem incluir assinatura de mensagem, micro-transfer ou outras
+evidências apropriadas. Método precisa ser compatível com risco e
+requisitos.
+
+## 9. Travel Rule × KYT
+
+Travel Rule: **quem?**\
+Blockchain analytics: **qual histórico/risco on-chain?**
+
+São complementares.
+
+## 10. Sanções
+
+O regime também se conecta a restrictive measures. Sanctions screening
+pode exigir ações específicas além de AML probabilístico.
+
+## 11. Interoperabilidade
+
+Vários protocolos/vendors precisam descobrir VASP contraparte,
+autenticar, trocar dados e casar mensagem off-chain com tx on-chain.
+
+## 12. GDPR
+
+É preciso equilibrar obrigação AML com minimização, segurança, retenção,
+acesso e transferências internacionais de dados.
+
+## 13. Exemplo CASP→CASP
+
+On-chain: `wallet X → wallet Y`.\
+Travel Rule: identidade de A → identidade de B.\
+KYT: risk analysis.
+
+## 14. CASP→self-hosted
+
+Withdrawal para MetaMask própria não tem Exchange Y. O CASP aplica
+política de self-hosted, verifica informações necessárias e avalia
+risco.
+
+## 15. Falha operacional
+
+Trade executado mas Travel Rule message falha. O state machine de
+settlement deve saber segurar, retransmitir, pedir dados, rejeitar ou
+escalar.
+
+## 16. Modelo de dados
+
+Originator; beneficiary; VASP IDs; addresses; network; asset; amount; tx
+hash; Travel Rule message ID; verification; sanctions/KYT; exception
+reason.
+
+## 17. Como memorizar
+
+**Blockchain transfere valor; Travel Rule transfere contexto de
+identidade.**
+
+## Fontes
+
+-   https://eur-lex.europa.eu/eli/reg/2023/1113/oj
+-   https://www.eba.europa.eu/activities/single-rulebook/regulatory-activities/anti-money-laundering-and-countering-financing-terrorism/guidelines-information-requirements-relation-transfers-funds-and-certain-crypto-assets-transfers

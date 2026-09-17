@@ -1,72 +1,122 @@
-# Parecer de Orientação CVM 40 --- Criptoativos e mercado de valores mobiliários
+# Parecer de Orientação CVM 40 --- Criptoativos e valores mobiliários
 
-## 1. Pergunta central
+## Resumo executivo
 
-O Parecer 40 responde: quando um criptoativo cai dentro do perímetro
-regulatório da CVM? A resposta depende da substância econômica, dos
-direitos conferidos e da legislação de valores mobiliários --- não do
-simples fato de existir um token.
+O Parecer 40 consolida como a CVM pensa a fronteira entre criptoativo e
+valor mobiliário. A tese central: **tecnologia ou nome do token não
+decide o enquadramento**. É preciso olhar direitos, função econômica,
+forma de oferta e características do investimento.
 
-## 2. Taxonomia didática
+## 1. Taxonomia didática
 
-A CVM discute categorias como payment tokens, utility tokens e tokens
-referenciados a ativos. Essas categorias ajudam a pensar, mas não são
-caixas juridicamente estanques.
+A CVM apresenta: - payment token: funções semelhantes a moeda; - utility
+token: acesso a produto/serviço; - asset-backed token: representa ativo
+tangível/intangível.
 
-## 3. Security token
+Security tokens, stablecoins e NFTs podem aparecer no terceiro grupo
+conforme estrutura. Categorias não são estanques.
 
-Um token que representa um valor mobiliário continua sujeito à
-legislação de valores mobiliários. Tokenização não transforma
-juridicamente um instrumento em outra coisa apenas porque settlement e
-registro usam DLT.
+## 2. Etiqueta não decide
+
+Chamar algo de "utility" não afasta securities law se, economicamente,
+ele é vendido como investimento que preenche o conceito legal.
+
+## 3. Instrumento tradicional tokenizado
+
+Se token representa ação/debênture, DLT muda infraestrutura, não
+necessariamente natureza jurídica. Tokenização não apaga a lei do ativo
+subjacente.
 
 ## 4. Contrato de investimento coletivo
 
-Uma área crítica é verificar se a estrutura pode configurar contrato de
-investimento coletivo: captação de recursos, expectativa de benefício
-econômico e esforço de empreendedor/terceiro são elementos relevantes à
-análise jurídica concreta.
+Área crítica é o art. 2º, IX, da Lei 6.385: contratos de investimento
+coletivo ofertados publicamente que gerem
+participação/parceria/remuneração cujo rendimento decorra do esforço do
+empreendedor ou terceiros.
 
-## 5. Stablecoins
+## 5. Elementos
 
-"Stablecoin" não é automaticamente valor mobiliário nem automaticamente
-fora da CVM. É necessário analisar direitos, estrutura, lastro,
-remuneração e forma de oferta. O nome comercial não resolve o
-enquadramento.
+Pergunte: existe investimento? coletividade? expectativa de benefício
+econômico? esforço de terceiro? oferta pública? A análise é factual, não
+um teste de palavra-chave.
 
-## 6. DeFi e intermediários
+## 6. Oferta pública
 
-Mesmo em estruturas tecnicamente descentralizadas, atividades, ofertas
-ou agentes podem cair no perímetro regulatório conforme os fatos. "Smart
-contract" não é uma exceção automática à lei.
+Mesmo se token é valor mobiliário, forma de distribuição importa.
+Campanha pública e colocação privada podem acionar regimes diferentes.
 
 ## 7. Disclosure
 
-O Parecer enfatiza transparência e divulgação adequada quando há valores
-mobiliários. Para tokenizações, white papers e materiais comerciais não
-substituem obrigações legais de oferta quando estas são aplicáveis.
+A CVM enfatiza full and fair disclosure. Em crypto: tecnologia, smart
+contract, governança, concentração, custody, liquidez, conflitos,
+tokenomics, direitos e risco regulatório.
 
-## 8. Relação com o BCB
+White paper de marketing não substitui disclosure regulatório quando a
+lei o exige.
 
-BCB e CVM não são alternativas escolhidas pelo emissor. Uma atividade
-pode ter componentes sob diferentes regimes. A análise deve decompor
-token, serviço, intermediário, derivativo, fluxo de pagamento e oferta.
+## 8. Intermediários
 
-## 9. Exemplo
+Se há valor mobiliário, exchanges, brokers, custodians e plataformas
+podem entrar em perímetros já existentes. "Descentralizado" não elimina
+automaticamente intermediário jurídico.
 
-Token que representa participação em receitas futuras de um
-empreendimento pode exigir análise de valor mobiliário. Já BTC spot, em
-si, não vira valor mobiliário apenas por ser negociado por uma
-instituição.
+## 9. Stablecoins
 
-## 10. Como memorizar
+Não são automaticamente securities. Analise resgate, lastro,
+remuneração, expectativa de lucro, gestão de reservas, distribuição e
+direitos contra emissor.
 
-**CVM 40 = "olhe para os direitos e para a substância econômica do
-token".**
+Payment stablecoin simples é diferente de token "stable" que distribui
+rendimento de carteira.
 
-## 11. Fonte primária
+## 10. NFTs
 
--   CVM --- Parecer de Orientação 40:
-    https://www.gov.br/cvm/pt-br/Treinamento/legislacao/pareceres-de-orientacao/copy2_of_portaria-conjunta-mf-cvm-no-92-de-21-de-marco-de-2018
+Non-fungible não é exclusão jurídica. Arte única é diferente de milhares
+de NFTs fracionados vendidos como participação econômica.
 
-> Material educacional; não constitui parecer jurídico.
+## 11. DeFi
+
+Pergunte quem desenvolve, controla upgrades/admin keys, recebe fees,
+opera front-end e exerce esforço gerencial. "DeFi" é descrição
+tecnológica, não conclusão regulatória.
+
+## 12. Tokenização
+
+Tokenizar recebíveis, imóveis, ações ou fundos pode melhorar
+settlement/registro, mas não elimina o regime do subjacente.
+
+## 13. BCB × CVM
+
+Pode haver ambos: - SPSAV sob BCB; - token security sob CVM; -
+transferência internacional sob BCB 521; - PLD/FT transversal.
+
+## 14. Exemplos
+
+**BTC spot:** em si, análise distinta de security; intermediário ainda
+pode estar sob BCB.\
+**Token de receitas:** promessa de parcela de receitas geradas pela
+equipe exige análise de contrato de investimento coletivo.\
+**Tokenized bond:** continua carregando natureza de valor mobiliário.
+
+## 15. Checklist
+
+1.  representa ativo regulado?
+2.  há retorno?
+3.  de onde vem?
+4.  depende de esforço de terceiro?
+5.  houve oferta pública?
+6.  há direito contra emissor?
+7.  há intermediário?
+8.  há derivativo?
+9.  qual disclosure?
+10. também cai no BCB?
+
+## 16. Como memorizar
+
+**CVM 40 = substance over label.** Pergunte "o que o investidor
+realmente comprou?".
+
+## Fontes
+
+-   https://conteudo.cvm.gov.br/legislacao/pareceres-orientacao/pare040.html
+-   https://www.gov.br/cvm/pt-br/assuntos/noticias/2022/cvm-divulga-parecer-de-orientacao-sobre-criptoativos-e-o-mercado-de-valores-mobiliarios

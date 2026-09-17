@@ -1,68 +1,110 @@
-# CLARITY Act --- Estrutura do mercado de ativos digitais nos EUA
+# CLARITY Act --- Market structure de digital assets nos EUA
 
-## 1. O que ele tenta resolver
+## Resumo executivo
 
-O CLARITY Act é uma proposta de market structure: pretende tornar mais
-clara a divisão de competências e regimes aplicáveis ao mercado de
-ativos digitais, especialmente a fronteira entre SEC e CFTC.
+O CLARITY Act é a tentativa legislativa de organizar **market
+structure**: clarificar SEC × CFTC, categorias de ativos e regimes para
+venues/intermediários, e separar em certas circunstâncias a análise de
+captação inicial da negociação secundária.
 
-## 2. Por que isso importa
+**Status em 16/09/2026: não é lei federal vigente.** Em 15/09/2026, o
+Senado não conseguiu superar a votação procedimental necessária para
+avançar o projeto (50--49, abaixo do threshold de 60 naquele estágio).
 
-Durante anos, um dos principais problemas dos EUA foi a incerteza sobre
-quando um token ou transação envolve security e quando o ativo pode ser
-tratado no regime de commodities. Essa classificação muda registro,
-intermediários, venue, disclosure e enforcement.
+## 1. Problema histórico
 
-## 3. SEC × CFTC
+Anos de incerteza sobre: - token security × commodity; - regulador do
+spot; - registro de exchange; - efeito da emissão inicial sobre
+negociação posterior; - fronteira SEC/CFTC.
 
-Didaticamente: - SEC: securities e mercados de valores mobiliários. -
-CFTC: commodities e, sobretudo, derivativos; o projeto amplia/clarifica
-a arquitetura para mercados de digital commodities. A realidade jurídica
-é mais detalhada do que essa simplificação.
+## 2. SEC
 
-## 4. Emissão × negociação secundária
+Regula securities, ofertas e intermediários/mercados associados. Se
+transação/ativo é security, entram disclosure, registro, broker-dealer,
+exchange etc.
 
-Uma ideia importante em debates de market structure é separar
-características de uma captação/emissão inicial das características do
-ativo em negociações posteriores. Isso procura reduzir a noção de que um
-histórico de oferta necessariamente determina para sempre todo uso
-secundário do ativo.
+## 3. CFTC
 
-## 5. Intermediários
+Tradicionalmente regula derivativos de commodities e possui autoridades
+sobre commodity spot, inclusive antifraude/manipulação. Market-structure
+legislation busca arquitetura explícita para digital commodities e seus
+mercados.
 
-Market structure não é apenas "classificar token". Ela determina quem
-pode operar exchange, broker/dealer e outras funções, sob quais
-registros e regras de conduta.
+## 4. Commodity não significa "sem regulação"
 
-## 6. Relação com GENIUS
+BTC futures já estão no universo CFTC. O problema é desenhar regras
+claras também para spot venues/intermediários.
 
-GENIUS é stablecoin-specific. CLARITY busca organizar o mercado de
-digital assets de forma mais ampla. Eles respondem a perguntas
-diferentes.
+## 5. Emissão × ativo
 
-## 7. Status em 16/09/2026
+Uma ideia central é distinguir a captação em que token foi vendido do
+ativo que depois circula. Isso evita concluir automaticamente que toda
+transferência futura é juridicamente idêntica à oferta inicial.
 
-Este ponto é essencial: **o CLARITY Act não deve ser tratado como lei
-federal vigente**. A Câmara havia aprovado legislação de market
-structure, mas em 15 de setembro de 2026 o Senado não conseguiu avançar
-o projeto em votação procedimental. Portanto, use o documento como
-referência de direção legislativa/proposta, não como regra já vigente.
+## 6. Descentralização/maturidade
 
-## 8. Exemplo
+Propostas usam critérios para classificar redes/ativos.
+"Descentralização" é difícil de medir: governance, ownership, upgrades,
+admin keys e influência econômica importam.
 
-Para uma mesa que negocia BTC spot e futuros, a classificação e o
-registro do venue afetam contraparte e execução. Para um token emitido
-para financiar um projeto, surge adicionalmente a análise de securities.
+## 7. Exchanges
 
-## 9. Como memorizar
+Market structure responde quem pode operar venue, quais ativos listar,
+custody, surveillance, conflitos e proteção do cliente.
 
-**CLARITY = market structure + SEC/CFTC + intermediários --- mas ainda é
-proposta legislativa, não lei vigente em 16/09/2026.**
+## 8. Brokers/dealers
 
-## 10. Fontes
+Intermediários de digital commodities ganhariam regimes próprios
+conforme texto aplicável, aproximando crypto da arquitetura produto +
+venue + intermediary + custody.
 
--   Congress.gov: https://www.congress.gov/
--   Reuters, 15/09/2026, sobre a votação no Senado:
-    https://www.reuters.com/legal/government/us-senate-vote-advancing-landmark-crypto-bill-2026-09-15/
+## 9. Customer assets
 
-> Material educacional; não constitui parecer jurídico.
+Após falências de exchanges, segregação e proteção de ativos tornaram-se
+centrais. O objetivo é reduzir caixas opacas que misturam exchange,
+broker, custodian e principal trader.
+
+## 10. Conflitos
+
+Crypto venues podem combinar listing, custody, market making,
+proprietary trading e lending. Market structure busca separar/controlar
+conflitos.
+
+## 11. DeFi
+
+Perguntas difíceis: quem é operador? developer? DAO? admin-key holder?
+front-end? Quando software vira intermediação? A aplicação é factual.
+
+## 12. CLARITY × GENIUS
+
+**GENIUS:** lei vigente de payment stablecoins.\
+**CLARITY:** proposta ampla de market structure.
+
+## 13. Impacto institucional potencial
+
+Se aprovado em forma semelhante: maior clareza de venue/counterparty,
+custody, classificação, spot markets regulados e menor dependência de
+enforcement para definir fronteiras.
+
+## 14. Erro a evitar
+
+Não escrever "conforme exige o CLARITY Act" como obrigação vigente em
+setembro de 2026. Diferencie projeto, versão, aprovação em cada Casa,
+sanção, effective date e rulemaking.
+
+## 15. Exemplo
+
+Exchange lista BTC, ETH e token novo: - BTC: commodity/spot market
+structure; - token novo: securities offering? - venue: registro? -
+custody: quem? - derivatives: CFTC; - stablecoin de settlement: GENIUS
+pode importar ao emissor.
+
+## 16. Como memorizar
+
+**CLARITY = tentativa de desenhar as estradas do mercado cripto
+americano; GENIUS regula o veículo stablecoin.**
+
+## Fontes
+
+-   https://www.congress.gov/
+-   https://www.reuters.com/legal/government/us-senate-vote-advancing-landmark-crypto-bill-2026-09-15/
