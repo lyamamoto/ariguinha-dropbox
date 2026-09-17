@@ -1,20 +1,18 @@
-# Guia detalhado de regulação cripto --- Brasil e Global
+# Guia completo de regulação cripto --- v3
 
-**Versão 2.0 --- referência: 16/09/2026.**
+Pacote em formato de guias comentados longos, com narrativa contínua e
+capítulos substanciais. Referência: 17/09/2026.
 
-Este pacote foi refeito como material de estudo autossuficiente. A meta
-não é reproduzir artigo por artigo, mas permitir que o leitor compreenda
-a arquitetura, conceitos, obrigações, exceções, riscos e consequências
-práticas dos documentos originais.
-
-## Ordem recomendada
-
-Brasil: Lei 14.478 → BCB 519 → BCB 520 → BCB 521 → CVM 40.\
-EUA: GENIUS → CLARITY.\
-UE: MiCA → TFR → DORA.\
-Global: FATF R.15 → Basel SCO60.\
-Hub adicional: Dubai VARA.
-
-Cada guia termina com fontes oficiais/primárias. Material educacional;
-para implementação, valide texto vigente, transições e parecer
-jurídico/compliance.
+-   `01_Brasil_Lei_14478_Marco_Legal.md`
+-   `02_Brasil_BCB_519_Autorizacao.md`
+-   `03_Brasil_BCB_520_Funcionamento_SPSAV.md`
+-   `04_Brasil_BCB_521_Cambio_Stablecoins.md`
+-   `05_Brasil_CVM_Parecer_40.md`
+-   `06_EUA_GENIUS_Act.md`
+-   `07_EUA_CLARITY_Act.md`
+-   `08_UE_MiCA.md`
+-   `09_UE_TFR_Travel_Rule.md`
+-   `10_UE_DORA.md`
+-   `11_Global_FATF_R15_Travel_Rule.md`
+-   `12_Global_Basel_BCBS_SCO60.md`
+-   `13_Dubai_VARA_Framework.md`

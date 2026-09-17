@@ -1,131 +1,992 @@
-# Resolução BCB 520/2025 --- Funcionamento das prestadoras de ativos virtuais
+# Resolução BCB 520/2025 --- Constituição e funcionamento das SPSAVs
 
-## Resumo executivo
+> **Guia comentado e didático --- referência: 17 de setembro de 2026**
 
-A BCB 520 é uma das peças operacionais centrais do regime brasileiro.
-Ela disciplina constituição e funcionamento das prestadoras, atividades,
-controles e transição. Para bancos, o art. 91 é especialmente
-importante: a partir de **30/10/2026**, instituições autorizadas pelo
-BCB não podem realizar ou viabilizar operações de ativos virtuais com
-prestadores que não estejam autorizados ou em processo de autorização no
-País, salvo hipóteses permitidas.
+## Como ler este documento
 
-## 1. Mudança de paradigma
+Este arquivo foi escrito para ser autossuficiente como material de
+estudo. O objetivo não é reproduzir o normativo artigo por artigo nem
+substituir aconselhamento jurídico, mas permitir que o leitor compreenda
+sua lógica, arquitetura e consequências práticas. Conceitos que só fazem
+sentido em conjunto são tratados em conjunto; natureza jurídica, função
+econômica, risco e implementação tecnológica são separados quando
+necessário.
 
-Custody, exchange e intermediação deixam de ser vistas apenas como
-features de software. Quando prestadas profissionalmente a terceiros,
-são serviços regulados com responsabilidades institucionais.
+**Tese central:** A BCB 520 é o núcleo operacional brasileiro: define
+ativos regulados, modalidades de prestadoras, atividades, requisitos de
+funcionamento, controles e transição, transformando exchange,
+intermediação e custody em responsabilidades institucionais.
 
-## 2. Decomposição de funções
+Os exemplos envolvendo bancos, exchanges, custodians, stablecoins,
+wallets e mesas de tesouraria tornam a regra concreta. Eles não são
+conclusões jurídicas automáticas para qualquer operação real. Em
+implementação, é necessário conferir texto oficial vigente, atos
+complementares, transições e fatos específicos.
 
-Uma interface única pode esconder várias atividades:
-`depósito fiat → ordem → execução → saldo → custody → withdrawal`.
+## 1. Arquitetura geral
 
-Regulação precisa saber quem responde por cada função. É por isso que
-categorias e atividades importam.
+A norma parte da Lei 14.478 e organiza universo das SPSAVs, ativos e
+modalidades. Esse ponto deve ser lido como parte da mecânica do regime,
+e não como detalhe isolado. Em ativos virtuais, uma única experiência de
+usuário pode combinar execução, custódia, transferência, conversão
+monetária e serviços de terceiros em diferentes jurisdições; por isso, a
+regra precisa ser aplicada à função econômica concreta e à entidade que
+efetivamente a desempenha.
 
-## 3. Intermediação
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-Riscos: execução, conflito de interesse, preço, uso indevido de
-informação, registro, contraparte e settlement. A trilha institucional
-deve preservar:
-`order → quote → acceptance → execution → hedge → settlement → reconciliation`.
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-## 4. Custódia
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-Controle da private key pode equivaler ao poder de movimentar o ativo.
-Controles relevantes: - segregação; - hot/warm/cold architecture; -
-MPC/multisig; - whitelisting; - dual control; - limites; - key
-recovery; - reconciliação on-chain × ledger; - forks/incidentes.
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
 
-A norma não precisa escolher uma tecnologia para exigir accountability.
+## 2. Ativos regulados
 
-## 5. Ativos de clientes
+O art. 3º remete ao conceito legal e exclusões da Lei 14.478, de modo
+que classificação do ativo continua sendo primeiro passo. Esse ponto
+deve ser lido como parte da mecânica do regime, e não como detalhe
+isolado. Em ativos virtuais, uma única experiência de usuário pode
+combinar execução, custódia, transferência, conversão monetária e
+serviços de terceiros em diferentes jurisdições; por isso, a regra
+precisa ser aplicada à função econômica concreta e à entidade que
+efetivamente a desempenha.
 
-Recursos próprios e de clientes precisam ser tratados de forma coerente
-com o regime. Uma wallet omnibus não elimina a necessidade de ledger
-interno preciso e reconciliação.
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-## 6. Governança
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-SPSAV precisa operar como instituição controlada: políticas, owners,
-escalonamento, auditoria, risco, compliance e evidências. "O código faz
-isso" não substitui governança.
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-## 7. Cyber e risco operacional
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
 
-Superfícies típicas: - private keys; - API keys; - smart contracts; -
-bridges; - signing infrastructure; - phishing; - withdrawal attacks.
+## 3. Três modalidades
 
-Controles tradicionais são necessários, mas não suficientes.
+Intermediárias, custodiantes e corretoras possuem escopos e regras de
+combinação de atividades. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
 
-## 8. Terceiros
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-Cloud, custody tech, exchange offshore, Travel Rule e blockchain
-analytics podem ser críticos. Outsourcing transfere execução, não
-necessariamente responsabilidade. É preciso mapear dados, localização,
-SLA, monitoramento, continuidade e exit plan.
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-## 9. Cliente e transparência
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-Cliente que vê "saldo BTC" precisa entender a natureza do direito: ativo
-segregado? saldo em ledger? quem custodia? quais riscos? Como ocorre
-withdrawal?
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
 
-## 10. PLD/FT
+## 4. Intermediação
 
-KYC deve ser combinado com sanctions screening, transaction monitoring,
-wallet analytics, políticas para self-hosted wallets, investigação e
-registros.
+Relacionar cliente e mercado traz riscos de execução, preço, conflitos,
+registro, contraparte e settlement. Esse ponto deve ser lido como parte
+da mecânica do regime, e não como detalhe isolado. Em ativos virtuais,
+uma única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
 
-## 11. Reconciliação
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-Três verdades precisam bater: 1. ledger do cliente; 2. posição da
-instituição; 3. blockchain/venue/custodiante.
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-Divergência pode ser atraso, bug, booking incorreto ou perda.
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-## 12. Art. 91 e 30/10/2026
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
 
-A vedação alcança, entre outros, negociação, intermediação, custody,
-câmbio, contas de pagamento e transações usadas para viabilizar
-operações de ativos virtuais com prestadores fora do status permitido.
+## 5. Custódia
 
-Isso afeta **banking rails**, não só trading direto.
+Controle e proteção de chaves e ativos exigem reconciliação, acesso,
+continuidade e responsabilidade. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
 
-## 13. Consequência para bancos
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-Não basta olhar um PIX isolado se ele é parte conhecida de serviço de
-VASP. Onboarding e monitoring precisam compreender finalidade, entidade
-e status regulatório.
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-## 14. Exemplo end-to-end
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-Cliente compra BTCBRL: 1. KYC/eligibility; 2. quote; 3. aceite; 4.
-booking; 5. hedge BTC; 6. hedge FX se necessário; 7. custody/alocação;
-8. reconciliação; 9. AML/KYT; 10. audit trail.
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
 
-Cada etapa precisa de owner e controles.
+## 6. Corretora
 
-## 15. Perguntas para produto institucional
+Combinação de funções aumenta conveniência e também conflitos que
+precisam ser governados. Esse ponto deve ser lido como parte da mecânica
+do regime, e não como detalhe isolado. Em ativos virtuais, uma única
+experiência de usuário pode combinar execução, custódia, transferência,
+conversão monetária e serviços de terceiros em diferentes jurisdições;
+por isso, a regra precisa ser aplicada à função econômica concreta e à
+entidade que efetivamente a desempenha.
 
--   quem é principal do trade?
--   quem controla inventory?
--   onde fica custody?
--   quais venues são permitidos?
--   entidade estrangeira pode ser usada?
--   como reconcilia?
--   quem bloqueia withdrawal?
--   como trata fork/airdrop?
--   como audita preço/hedge?
--   como monitora status regulatório?
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
 
-## 16. Como memorizar
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
 
-**520 = operating system regulatório das SPSAVs.**\
-E **30/10/2026** é um marco operacional para relacionamento de
-instituições BCB com prestadores de ativos virtuais.
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
 
-## Fonte
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 7. Segregação de funções
+
+Trading próprio, execução de cliente e custody precisam de controles
+quando coexistem. Esse ponto deve ser lido como parte da mecânica do
+regime, e não como detalhe isolado. Em ativos virtuais, uma única
+experiência de usuário pode combinar execução, custódia, transferência,
+conversão monetária e serviços de terceiros em diferentes jurisdições;
+por isso, a regra precisa ser aplicada à função econômica concreta e à
+entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 8. Ativos de clientes
+
+Wallet omnibus não elimina necessidade de ledger interno capaz de
+atribuir direitos inequivocamente. Esse ponto deve ser lido como parte
+da mecânica do regime, e não como detalhe isolado. Em ativos virtuais,
+uma única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 9. Private keys
+
+Hot/cold, MPC, multisig, allowlists, key recovery e dual control são
+escolhas técnicas que precisam produzir segurança e auditabilidade. Esse
+ponto deve ser lido como parte da mecânica do regime, e não como detalhe
+isolado. Em ativos virtuais, uma única experiência de usuário pode
+combinar execução, custódia, transferência, conversão monetária e
+serviços de terceiros em diferentes jurisdições; por isso, a regra
+precisa ser aplicada à função econômica concreta e à entidade que
+efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 10. Trilha de ordens
+
+Order, quote, acceptance, execution, hedge, settlement e reconciliation
+devem ser reconstruíveis. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 11. Governança
+
+Políticas, owners, linhas de defesa, auditoria e escalonamento
+transformam software em operação controlada. Esse ponto deve ser lido
+como parte da mecânica do regime, e não como detalhe isolado. Em ativos
+virtuais, uma única experiência de usuário pode combinar execução,
+custódia, transferência, conversão monetária e serviços de terceiros em
+diferentes jurisdições; por isso, a regra precisa ser aplicada à função
+econômica concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 12. Cyber
+
+Private keys, APIs, smart contracts, bridges e withdrawals criam
+superfícies de ataque específicas. Esse ponto deve ser lido como parte
+da mecânica do regime, e não como detalhe isolado. Em ativos virtuais,
+uma única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 13. Terceirização
+
+Cloud, custody tech, analytics e venues exigem seleção, monitoramento,
+continuidade e exit plan. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 14. Transparência
+
+Cliente precisa compreender natureza do serviço, riscos, custody,
+execução, taxas e direitos. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 15. PLD e KYT
+
+KYC, sanctions, transaction monitoring e blockchain analytics formam
+cadeia única de decisão. Esse ponto deve ser lido como parte da mecânica
+do regime, e não como detalhe isolado. Em ativos virtuais, uma única
+experiência de usuário pode combinar execução, custódia, transferência,
+conversão monetária e serviços de terceiros em diferentes jurisdições;
+por isso, a regra precisa ser aplicada à função econômica concreta e à
+entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 16. Reconciliação
+
+Ledger do cliente, posição da instituição e realidade on-chain ou no
+venue devem bater. Esse ponto deve ser lido como parte da mecânica do
+regime, e não como detalhe isolado. Em ativos virtuais, uma única
+experiência de usuário pode combinar execução, custódia, transferência,
+conversão monetária e serviços de terceiros em diferentes jurisdições;
+por isso, a regra precisa ser aplicada à função econômica concreta e à
+entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 17. Artigo 91
+
+A partir de 30/10/2026 há vedação relevante a operações com prestadores
+fora do status permitido. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 18. Banking rails
+
+Conta, PIX e pagamentos usados para viabilizar VASP precisam considerar
+finalidade e status regulatório. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 19. Caso BTCBRL
+
+Quote, booking, hedge BTC, hedge FX, custody, reconciliação e AML
+precisam compartilhar a mesma operação econômica. Esse ponto deve ser
+lido como parte da mecânica do regime, e não como detalhe isolado. Em
+ativos virtuais, uma única experiência de usuário pode combinar
+execução, custódia, transferência, conversão monetária e serviços de
+terceiros em diferentes jurisdições; por isso, a regra precisa ser
+aplicada à função econômica concreta e à entidade que efetivamente a
+desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 20. Withdrawal
+
+Transferência externa exige fraude, sanctions, KYT, self-hosted-wallet
+policy e registros. Esse ponto deve ser lido como parte da mecânica do
+regime, e não como detalhe isolado. Em ativos virtuais, uma única
+experiência de usuário pode combinar execução, custódia, transferência,
+conversão monetária e serviços de terceiros em diferentes jurisdições;
+por isso, a regra precisa ser aplicada à função econômica concreta e à
+entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 21. Implementação
+
+Entitlements, limits, audit logs, settlement state machines e regulatory
+master data são componentes centrais. Esse ponto deve ser lido como
+parte da mecânica do regime, e não como detalhe isolado. Em ativos
+virtuais, uma única experiência de usuário pode combinar execução,
+custódia, transferência, conversão monetária e serviços de terceiros em
+diferentes jurisdições; por isso, a regra precisa ser aplicada à função
+econômica concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 22. Relação 519 e 521
+
+519 responde quem entra, 520 como funciona e 521 quando o fluxo toca
+câmbio e capitais internacionais. Esse ponto deve ser lido como parte da
+mecânica do regime, e não como detalhe isolado. Em ativos virtuais, uma
+única experiência de usuário pode combinar execução, custódia,
+transferência, conversão monetária e serviços de terceiros em diferentes
+jurisdições; por isso, a regra precisa ser aplicada à função econômica
+concreta e à entidade que efetivamente a desempenha.
+
+Do ponto de vista regulatório, a instituição precisa converter essa
+ideia em classificação operacional verificável. Não basta uma política
+afirmar que o tema foi considerado: produto, entidade jurídica, fluxo de
+recursos e ativos, responsáveis e registros precisam demonstrar como a
+regra foi aplicada. Isso exige separar o que é classificação do
+instrumento, autorização da entidade, obrigação de conduta, controle
+operacional e eventual obrigação de informação ou reporte.
+
+Uma forma útil de testar a implementação é reconstruir uma operação
+depois do fato. O revisor deveria conseguir identificar cliente e
+contraparte, ativo, serviço, entidade que assumiu a obrigação, controles
+executados, local de execução e settlement e exceções aprovadas. Se a
+resposta depende de conhecimento informal da mesa ou de juntar
+manualmente bases sem identificador comum, existe uma lacuna entre a
+norma e o modelo operacional.
+
+Também é importante não confundir equivalência econômica com identidade
+jurídica. Dois fluxos podem produzir exposição financeira semelhante e
+cair em regimes diferentes; inversamente, trocar o rail tecnológico pode
+não mudar a substância regulatória. Blockchain, API, smart contract ou
+stablecoin descrevem componentes técnicos. O enquadramento continua
+dependendo de direitos, funções, participantes e fluxo econômico.
+
+Para uma instituição financeira, o resultado esperado é uma cadeia de
+evidências: regra aplicável → decisão de enquadramento → controle
+preventivo → execução → registro → reconciliação → monitoramento e,
+quando necessário, reporte. Essa cadeia torna a regra repetível e
+auditável e permite adaptar o produto quando norma, interpretação
+supervisora ou arquitetura tecnológica mudarem.
+
+## 23. Como as partes se conectam
+
+A melhor maneira de não se perder nos detalhes é voltar à tese central:
+A BCB 520 é o núcleo operacional brasileiro: define ativos regulados,
+modalidades de prestadoras, atividades, requisitos de funcionamento,
+controles e transição, transformando exchange, intermediação e custody
+em responsabilidades institucionais. Alguns capítulos definem o
+perímetro --- quem, qual ativo ou qual atividade entra. Outros descrevem
+condições para operar dentro dele. Outros tratam de controles, dados,
+supervisão ou consequências quando a operação cruza fronteiras
+institucionais.
+
+Na prática, uma instituição não implementa uma norma por artigos
+isolados. Ela cria um mapa de obrigações e liga cada obrigação a
+produtos, entidades, processos e sistemas. O mesmo trade pode gerar
+decisões em quatro camadas: classificação jurídica do ativo; autorização
+da entidade; regras de conduta e operação; e obrigações de registro,
+monitoramento ou reporte. Havendo componente internacional, surge ainda
+a pergunta sobre qual jurisdição regula cada participante e cada perna.
+
+Por isso, compliance, trading e settlement precisam compartilhar
+identificadores. `client_id`, `legal_entity_id`, `trade_id`, `order_id`,
+`wallet_id`, `transaction_hash`, `venue_id` e
+`regulatory_classification` não deveriam viver em universos
+desconectados. A operação regulatória deve ser reconstruível a partir
+dos mesmos fatos econômicos que geraram risco e contabilidade.
+
+## 24. Roteiro de implementação
+
+Comece por legal-perimeter mapping: produtos, ativos, clientes,
+entidades, jurisdições e atividades. Depois faça control mapping,
+ligando cada requisito a controle e owner. Em seguida faça data mapping,
+identificando campos que provam execução do controle e sistemas que são
+fontes oficiais. Por fim, defina exceções, escalonamento, testes,
+evidências e revisão periódica.
+
+Em crypto isso precisa acontecer antes do go-live. Se o OMS nunca
+capturou finalidade econômica, se wallets não possuem vínculo com
+cliente/entidade ou se a arquitetura não distingue principal de agent,
+produzir reporting correto depois pode exigir reconstrução manual. O
+custo de compliance cresce quando dados regulatórios não nascem junto
+com o trade.
+
+A classificação também precisa de change management. Tokens mudam
+direitos, venues mudam entidade contratante, emissores alteram reservas,
+protocolos adicionam bridges e licenças mudam de status. Portanto,
+classificação não pode ser um campo eterno preenchido no onboarding;
+precisa de owner, fonte, data de revisão e gatilhos de reavaliação.
+
+## 25. Checklist de leitura crítica
+
+Pergunte: qual é o ativo e quais direitos representa? Quem presta o
+serviço e para quem? A entidade está autorizada para essa atividade?
+Quem controla o ativo em cada etapa? Onde ficam execução, custody e
+settlement? Existe conversão fiat, pagamento ou transferência
+internacional? Há security, derivativo ou outra categoria já regulada?
+Quais dados de cliente, beneficiário e contraparte precisam ser
+conhecidos? Quais riscos permanecem depois do hedge?
+
+Confronte também desenho econômico e jurídico. Se o cliente acredita
+comprar ativo segregado, contrato, ledger e custody sustentam isso? Se a
+mesa diz fornecer apenas liquidez, a entidade também não custodia ou
+intermedeia? Se o fluxo é chamado de withdrawal, ele economicamente
+representa remessa? Se o hedge é perfeito em delta, é reconhecido
+prudencialmente? Nomenclatura interna não pode substituir análise.
+
+## 26. Conclusão
+
+A BCB 520 é o núcleo operacional brasileiro: define ativos regulados,
+modalidades de prestadoras, atividades, requisitos de funcionamento,
+controles e transição, transformando exchange, intermediação e custody
+em responsabilidades institucionais.
+
+A peça deve ser lida como arquitetura, não como coleção de frases. O
+regulador procura ligar atividade econômica real a entidade responsável,
+controles verificáveis e informação suficiente para supervisão. Quanto
+mais complexa a cadeia --- banco brasileiro, afiliada offshore,
+stablecoin estrangeira, venue em outra jurisdição, blockchain pública e
+custodian terceirizado --- mais importante decompor o fluxo e depois
+reconstruí-lo de ponta a ponta.
+
+### Fontes primárias e oficiais
 
 -   https://www.bcb.gov.br/estabilidadefinanceira/exibenormativo?numero=520&tipo=Resolu%C3%A7%C3%A3o+BCB
